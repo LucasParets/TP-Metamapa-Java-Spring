@@ -1,0 +1,90 @@
+<html lang="es" th:replace="~{layout/base_admin :: html}">
+    <div th:fragment="contenido" class="crear-coleccion-container">
+        <div class="crear-coleccion-card white-card-black-border" style="margin: 5rem 0;">
+            <div class="criterios-panel">
+                <div class="criterios-panel-header">
+                    <h2>Criterios actuales</h2>
+                    <button class="black-btn" onclick="mostrarFormNuevoCriterio()">Agregar criterio</button>
+                </div>
+
+                <div th:if="${criterios == null || criterios.isEmpty()}" style="color: red; margin-bottom: 20px;">
+                    No hay criterios definidos para esta colección.
+                </div>
+                
+                <div class="criterios-list" th:if="${criterios != null && !criterios.isEmpty()}">
+                    <table class="criterios-table">
+                        <thead>
+                            <tr>
+                                <th>Tipo de criterio</th>
+                                <th>Parámetros</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="criterio, itemStat : ${criterios}">
+                                <td th:text="${#strings.replace(criterio.nombre_criterio, '_', ' ')}"></td>
+                                <td>
+                                    <div th:each="parametro : ${criterio.parametros}" style="margin-bottom: 5px;">
+                                        <strong th:text="${#strings.replace(parametro.key, '_', ' ')}"></strong>:
+                                        <span th:text="${parametro.value}"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <form th:action="@{/admin/colecciones/{handle}/criterios/{id}/eliminar(handle=${handle}, id=${criterio.id})}" method="post" style="display: inline;">
+                                        <button type="button" class="red-btn" onclick="confirmarEliminacion(this.form)">Eliminar</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Formulario para agregar nuevo criterio -->
+            <div id="nuevo-criterio-form" style="display: none;">
+                <h3>Agregar nuevo criterio</h3>
+                <form th:action="@{/admin/colecciones/{handle}/criterios/agregar(handle=${handle})}" method="post">
+                    <div id="criterios-container">
+                        <div class="criterio-item">
+                            <label for="nombre_criterio">Tipo de criterio:</label>
+                            <select id="nombre_criterio" name="nombre_criterio" class="criterio-select" onchange="actualizarParametrosNuevo(this)">
+                                <option value="">Seleccione un criterio</option>
+                                <option th:if="${!tieneCriterioDeFecha}" value="fecha_hecho_desde">Fecha del hecho desde</option>
+                                <option th:if="${!tieneCriterioDeFecha}" value="fecha_hecho_hasta">Fecha del hecho hasta</option>
+                                <option th:if="${!tieneCriterioDeFecha}" value="fecha_hecho_exacta">Fecha del hecho exacta</option>
+                                <option th:if="${!tieneCriterioDeFecha}" value="fecha_hecho_intervalo">Intervalo de fechas del hecho</option>
+                                <option th:if="${!tieneCriterioDeFecha}" value="fecha_carga_desde">Fecha de carga desde</option>
+                                <option th:if="${!tieneCriterioDeFecha}" value="fecha_carga_hasta">Fecha de carga hasta</option>
+                                <option th:if="${!tieneCriterioDeFecha}" value="fecha_carga_exacta">Fecha de carga exacta</option>
+                                <option th:if="${!tieneCriterioDeFecha}" value="fecha_carga_intervalo">Intervalo de fechas de carga</option>
+                                <option value="coincide_categoria">Coincide categoría</option>
+                                <option value="contiene_etiqueta">Contiene etiqueta</option>
+                                <option value="rango_distancia">Rango de distancia</option>
+                            </select>
+                            <div class="parametros-container" id="params-nuevo">
+
+                            </div>
+                            <div id="categoria-select">
+                                <label for="categoria-select-input">Categoría:</label>
+                                <select id="categoria-select-input" name="parametros['categoria']">
+                                    <option value="">Seleccione una categoría</option>
+                                    <option th:each="categoria : ${categorias}"
+                                            th:value="${categoria.nombre}"
+                                            th:text="${categoria.nombre}">
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="black-btn">Guardar criterio</button>
+                        <button type="button" class="cancel-btn" onclick="ocultarFormNuevoCriterio()">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <th:block th:fragment="scripts">
+        <script th:src="@{/js/admin/criterios.js}"></script>
+    </th:block>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title th:text="${titulo} + ' - MetaMapa Admin'"></title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="/css/admin/admin.css">
+        <link rel="stylesheet" href="/css/admin/dashboard.css">
+        <link rel="stylesheet" href="/css/admin/colecciones.css">
+        <link rel="stylesheet" href="/css/admin/crear_coleccion.css">
+        <link rel="stylesheet" href="/css/admin/criterios.css">
+        <link rel="stylesheet" href="/css/admin/importar.css">
+        <link rel="stylesheet" href="/css/admin/notificaciones.css">
+        <link rel="stylesheet" href="/css/admin/pagination.css">
+        <link rel="stylesheet" href="/css/admin/filtros.css">
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <meta name="_csrf" th:content="${_csrf.token}"/>
+        <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    </head>
+    <body>
+        <script th:inline="javascript">
+            addEventListener('resize', () => {
+                if (window.innerWidth >= 1000)
+                    document.getElementById('sidebar-menu-container').style.width = "auto";
+                if (window.innerWidth < 1000)
+                    document.getElementById('sidebar-menu-container').style.width = "0px";
+            })
+        </script>
+        <div class="admin-display-grid">
+            <header class="top-left-container">
+                <p class="metamapa-titulo">MetaMapa</p>
+                <span class="btn-sidebar" onclick="openCloseSidebar()">☰</span>
+            </header>
+            <header class="top-right-container">
+                <div class="admin-info-container">
+                    <div class="admin-info-left">
+                        <img class="admin-avatar" src="/img/avatar.webp" alt="Avatar">
+                    </div>
+                    <div class="admin-info-right">
+                        <p class="admin-nombre" th:text="${#authentication.name.substring(0,1).toUpperCase() + #authentication.name.substring(1)}"></p>
+                        <p class="admin-rol">Administrador</p>
+                    </div>
+                </div>
+            </header>
+            <aside class="bottom-left-container" id="sidebar-menu-container">
+                <div class="admin-sidebar-items">
+                    <a class="admin-sidebar-item" th:href="@{/admin/dashboard}">Dashboard</a>
+                    <a class="admin-sidebar-item" th:href="@{/admin/hechos}">Hechos</a>
+                    <a class="admin-sidebar-item" th:href="@{/admin/colecciones}">Colecciones</a>
+                    <a class="admin-sidebar-item" th:href="@{/admin/revisiones}">Revisiones de hechos</a>
+                    <a class="admin-sidebar-item" th:href="@{/admin/solicitudes-eliminacion}">Solicitudes de eliminación</a>
+                    <a class="admin-sidebar-item" th:href="@{/admin/solicitudes-modificacion}">Solicitudes de modificación</a>
+                    <a class="admin-sidebar-item" th:href="@{/admin/exportar-estadisticas}">Exportar estadísticas</a>
+                    <a class="admin-sidebar-item" th:href="@{/admin/importar}">Importar hechos</a>
+                    <a class="admin-sidebar-item" th:href="@{/inicio}">Salir</a>
+                </div>
+                <div class="admin-info-container">
+                    <div class="admin-info-left">
+                        <img class="admin-avatar" src="/img/avatar.webp" alt="Avatar">
+                    </div>
+                    <div class="admin-info-right">
+                        <p class="admin-nombre" th:text="${#authentication.name.substring(0,1).toUpperCase() + #authentication.name.substring(1)}"></p>
+                        <p class="admin-rol">Administrador</p>
+                    </div>
+                </div>
+            </aside>
+            <main class="bottom-right-container">
+                <div th:replace="~{${contenido} :: contenido}"></div>
+            </main>
+        </div>
+
+        <th:block th:replace="~{${scripts} :: scripts}"></th:block>
+        <th:block th:replace="~{fragments/alerta :: swal}"></th:block>
+        <script th:src="@{/js/sidebar.js}"></script>
+    </body>
+</html>

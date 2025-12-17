@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.springframework</groupId>
+    <artifactId>metamapa</artifactId>
+    <version>0.1.0</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>fuente-dinamica</module>
+        <module>fuente-estatica</module>
+        <module>fuente-proxy</module>
+        <module>servicio-agregacion</module>
+        <module>servicio-auth</module>
+        <module>servicio-estadisticas</module>
+        <module>servicio-discovery</module>
+        <module>servicio-gateway</module>
+        <module>interfaz-web</module>
+    </modules>
+
+</project>

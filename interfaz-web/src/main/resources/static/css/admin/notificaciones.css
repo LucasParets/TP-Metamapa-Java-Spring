@@ -1,0 +1,116 @@
+.notificaciones-header {
+    padding: 2rem 2.5rem .5rem 2.5rem;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.notificaciones-header-estado-revision-btns {
+    display: flex;
+    gap: 1rem;
+    margin-left: 1.25rem;
+}
+
+.estado-revision {
+    text-decoration: none;
+    color: #222;
+    background-color: white;
+    border: 1px solid #222;
+    border-radius: 20px;
+    padding: .4rem 1rem;
+    font-size: 0.9em;
+}
+
+.estado-revision-desactivado {
+    display: flex;
+    align-items: center;
+    color: #fff;
+    background-color: #222;
+    border-radius: 20px;
+    padding: .4rem 1rem;
+    font-size: 0.9em;
+}
+
+.notificaciones-list {
+    padding: 1rem 2.5rem;
+}
+
+.notificacion-card {
+    margin-bottom: 1rem;
+}
+
+.notificacion-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.1rem;
+}
+
+.notificacion-card-title {
+    font-size: 1.35rem;
+    font-weight: bold;
+}
+
+.notificacion-description {
+    margin: 1.5rem 0;
+    color: #333;
+    text-align: justify;
+    overflow-wrap: break-word;
+}
+
+.notificacion-card-bottom {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.notificacion-card-top-btns form {
+    display: inline;
+}
+
+.notificacion-card-accept {
+    text-decoration: none;
+    font-size: 2rem;
+    color: green;
+    margin-right: 1rem;
+    font-weight: bold;
+}
+
+.notificacion-card-accept-with-suggestion {
+    text-decoration: none;
+    font-size: 2rem;
+    color: #10a3d8;
+    margin-right: .25rem;
+    font-weight: bold;
+}
+
+.notificacion-card-accept-with-suggestion span img {
+    height: 1rem;
+    width: 1rem;
+    position: relative;
+    right: 7px;
+    top: 10px;
+}
+
+.notificacion-card-cancel {
+    text-decoration: none;
+    font-size: 2rem;
+    color: red;
+}
+
+.notificacion-card-accept-with-suggestion,
+.notificacion-card-accept,
+.notificacion-card-cancel {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.notificacion-card-accept-with-suggestion:hover,
+.notificacion-card-accept:hover,
+.notificacion-card-cancel:hover {
+    opacity: .4;
+}
+
+.notificacion-card-content > * {
+    margin-bottom: .75rem;
+}

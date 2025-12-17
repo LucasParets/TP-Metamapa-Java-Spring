@@ -1,0 +1,130 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    color: #222;
+}
+
+body {
+    min-height: 100vh;
+}
+
+.metamapa-header {
+    background-color: #222;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #eee;
+    padding: 0 40px;
+    height: 80px;
+}
+
+.logo {
+    font-weight: 700;
+    font-size: 2rem;
+    color: #eee;
+}
+
+.nav-buttons a {
+    text-decoration: none;
+    padding: 8px 18px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-login {
+    background-color: white;
+    color: #222;
+    margin-right: 12px;
+}
+
+.btn-registro {
+    background-color: #222;
+    color: #fff;
+    margin-right: 12px;
+}
+
+.error-messages{
+    width: calc(100% - 2rem);
+    margin: 1rem 0;
+    padding: .875rem 1rem;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #ffe7ea;
+    border: 1px solid #f4b7bf;
+}
+
+.info-messages{
+    display: flex;
+    align-items: flex-start;
+    gap: .75rem;
+    width: 100%;
+    margin: 1rem 0;
+    padding: .875rem 1rem;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,.08);
+    color: #1f2937;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #bfe5cd;
+    background: #e8f5ec;
+}
+.info-messages::before{
+    border-left: 6px solid #198754;
+}
+
+.user-info-container {
+    display: flex;
+    align-items: center;
+    background-color: #F2F2F2;
+    border-radius: 30px;
+    padding: 5px 10px;
+}
+
+.user-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: .75rem;
+}
+
+.user-nombre {
+    color: #000;
+    font-size: 1.2rem;
+    margin-right: .75rem;
+}
+
+.user-rol {
+    color: #b3b2b2;
+    font-size: .75rem;
+}
+
+@media (max-width: 700px) {
+    .btn-registro {
+        display: none;
+    }
+}
+
+@media (max-width: 500px) {
+    .metamapa-header {
+        padding: 0 10px;
+    }
+}
+
+@media (max-width: 400px) {
+    .logo {
+        font-weight: 700;
+        font-size: 1.5rem;
+    }
+
+    .nav-buttons a {
+        font-size: 0.8rem;
+    }
+    .btn-login {
+        margin: 0;
+    }
+}

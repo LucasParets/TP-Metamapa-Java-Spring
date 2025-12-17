@@ -1,0 +1,220 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+.admin-display-grid {
+    display: grid;
+    grid-template-columns: 1fr 5fr;
+    grid-template-rows: 1fr 11fr;
+    height: 100vh;
+    max-height: 100vh;
+}
+
+.top-left-container {
+    display: flex;
+    align-items: center;
+    background-color: #222;
+}
+
+.metamapa-titulo {
+    color: white;
+    font-size: 2.25rem;
+    margin: 1rem 1.5rem;
+    font-weight: bold;
+}
+
+.top-right-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.admin-info-container {
+    display: flex;
+    align-items: center;
+    margin: 0 4rem;
+}
+
+.admin-avatar {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    margin-right: .75rem;
+}
+
+.admin-nombre {
+    color: #000;
+    font-size: 1.2rem;
+}
+
+.admin-rol {
+    color: #b3b2b2;
+    font-size: .75rem;
+}
+
+.bottom-left-container {
+    background-color: #5E5E5E;
+}
+
+.admin-sidebar-items {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+}
+
+.admin-sidebar-item {
+    color: white;
+    text-decoration-line: none;
+    font-size: 1.25rem;
+    padding: .75rem 1rem;
+    margin: .3rem 1.5rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.admin-sidebar-item:hover {
+    color: #414141;
+    background-color: #F2F2F2;
+    opacity: 0.7;
+    border-radius: 10px;
+}
+
+.bottom-right-container {
+    background-color: #F2F2F2;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.admin-sidebar-current-page-item {
+    color: #414141;
+    background-color: #F2F2F2;
+    border-radius: 10px;
+    font-size: 1.25rem;
+    padding: .75rem 1rem;
+    margin: .3rem 1.5rem;
+    cursor: default;
+}
+
+.white-btn {
+    background-color: white;
+    color: black;
+    text-decoration: none;
+    border: 2px solid black;
+    padding: 3px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: .75rem;
+    font-weight: 700;
+    margin-left: 10px;
+}
+
+.black-tag {
+    background-color: #222;
+    color: white;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    margin-left: 5px;
+    font-weight: bold;
+}
+
+.black-tag-btn {
+    border: none;
+    cursor: pointer;
+    margin-left: 10px;
+    background-color: transparent;
+    color: white;
+    font-weight: bold;
+}
+
+.black-tag-btn:hover {
+    opacity: 0.6;
+}
+
+.gray-tag {
+    background-color: #D4D4D4;
+    color: black;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 0.75rem;
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.white-card-black-border {
+    background-color: white;
+    color: #222;
+    border-radius: 10px;
+    padding: 2.5rem;
+    border: 2px solid #2A2A2A;
+    box-shadow: 0 3px #2A2A2A;
+}
+
+.btn-sidebar {
+    color: white;
+    font-size: 1.5rem;
+    padding: 1.5rem 1.25rem 1.5rem .7rem;
+    cursor: pointer;
+    border: none;
+    display: none;
+    user-select: none;
+}
+
+.bottom-left-container .admin-info-container {
+    display: none;
+}
+
+@media screen and (max-width: 1000px) {
+
+    .bottom-left-container {
+        position: fixed;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+        width: 0;
+        z-index: 1;
+        transition: left 0.3s ease;
+        background-color: #222;
+        opacity: 0.97;
+        overflow: hidden;
+    }
+
+    .metamapa-titulo {
+        margin: .5rem;
+    }
+
+    .top-left-container {
+        justify-content: space-between;
+        padding: 0 1rem;
+    }
+
+    .btn-sidebar {
+        display: block;
+    }
+
+    .top-right-container {
+        display: none;
+    }
+
+    .admin-display-grid {
+        grid-template-columns: 100vw;
+    }
+
+    .top-left-container {
+        display: flex;
+        align-items: center;
+    }
+
+    .bottom-left-container .admin-info-container {
+        display: flex;
+        padding: 10px;
+        background-color: #F2F2F2;
+        border-radius: 15px;
+        margin: 0 1rem 2rem 1rem;
+    }
+}

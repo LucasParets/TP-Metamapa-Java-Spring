@@ -1,0 +1,9 @@
+<html lang="es" th:replace="~{layout/base_admin :: html}">
+    <div th:fragment="contenido">
+      <!--/*@thymesVar id="mensaje" type=""*/-->
+      <h3 style="margin: 2rem" th:text="${mensaje} ?: 'Elemento no encontrado'"></h3>
+      <a style="margin: 2rem" th:href="@{/admin/dashboard}">Volver al inicio</a>
+    </div>
+    <th:block th:fragment="scripts">
+    </th:block>
+</html>

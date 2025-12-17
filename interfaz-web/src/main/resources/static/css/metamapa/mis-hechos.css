@@ -1,0 +1,43 @@
+.h-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 70%;
+    margin: 2rem 0;
+}
+
+.h-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: calc(100% - 120px);
+    background-color: #fff;
+    border: 1px solid #777;
+    border-radius: 10px;
+    padding: 30px 60px;
+}
+
+.h-card-item {
+    margin-left: 1.5rem;
+}
+
+.h-card-btns {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.edit-btn {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+.edit-btn:hover {
+    opacity: .4;
+}
+
+.h-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

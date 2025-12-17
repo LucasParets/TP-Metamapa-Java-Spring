@@ -1,0 +1,61 @@
+<html th:replace="~{layout/base_admin :: html}" lang="es">
+    <div th:fragment="contenido">
+      <h2 th:if="${error != null || dashboard == null}" style="color: #a80404; margin-top: 20px; margin-left: 20px">
+        No se pudo cargar el dashboard.
+      </h2>
+      <div class="dashboard-container" th:if="${dashboard != null}">
+        <div class="dashboard-card dashboard-metric-card">
+          <div class="dashboard-metric-content">
+            <div class="dashboard-metric-value" th:text="${dashboard.cant_hechos}"></div>
+            <div class="dashboard-metric-label">Hechos</div>
+          </div>
+        </div>
+        <div class="dashboard-card dashboard-metric-card">
+          <div class="dashboard-metric-content">
+            <div class="dashboard-metric-value" th:text="${dashboard.cant_colecciones}"></div>
+            <div class="dashboard-metric-label">Colecciones</div>
+          </div>
+        </div>
+        <div class="dashboard-card dashboard-metric-card" id="last-metric-card">
+          <div class="dashboard-metric-content">
+            <div class="dashboard-metric-value" th:text="${dashboard.cant_solicitudes}"></div>
+            <div class="dashboard-metric-label">Solicitudes</div>
+          </div>
+        </div>
+        <div class="dashboard-card dashboard-panel-hechos">
+          <div class="dashboard-panel-title">Ultimos hechos agregados</div>
+          <ul class="dashboard-panel-list">
+            <li th:each="hecho : ${dashboard.ultimos_5_hechos_agregados}">
+              <a class="dashboard-panel-list-row" th:href="@{/hechos/{id}(id=${hecho.id})}">
+                <span class="dashboard-panel-list-date" th:text="${#temporals.format(hecho.fecha_carga, 'dd/MM/yyyy')}"></span>
+                <span class="dashboard-panel-list-name" th:text="${hecho.titulo}"></span>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="dashboard-card dashboard-panel-solicitudes">
+          <div class="dashboard-panel-title">Notificaciones</div>
+          <ul class="dashboard-panel-list-solicitudes">
+            <li><span class="dashboard-panel-list-date">Hoy</span> <br>Solicitud de eliminación del hecho #1456</li>
+            <li><span class="dashboard-panel-list-date">Hoy</span> <br>Solicitud de eliminación del hecho #1457</li>
+            <li><span class="dashboard-panel-list-date">Hoy</span> <br>Solicitud de eliminación del hecho #1453</li>
+            <li><span class="dashboard-panel-list-date">Ayer</span> <br>Solicitud de eliminación del hecho #1423</li>
+            <li><span class="dashboard-panel-list-date">Ayer</span> <br>Solicitud de eliminación del hecho #1498</li>
+          </ul>
+        </div>
+        <div class="dashboard-card dashboard-panel-colecciones">
+          <span class="dashboard-panel-title">Colecciones con más hechos</span>
+          <ul class="dashboard-panel-list-colecciones">
+            <li class="dashboard-panel-list-item" th:each="coleccion : ${dashboard.colecciones_top_5_x_cant_hechos}">
+              <a class="dashboard-panel-list-row" th:href="@{/colecciones/{handle}/hechos(handle=${coleccion.handle})}">
+                <span class="dashboard-panel-list-name" th:text="${coleccion.titulo}"></span>
+                <span class="dashboard-panel-list-count" th:text="${coleccion.cant_hechos}"></span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <th:block th:fragment="scripts">
+    </th:block>
+</html>

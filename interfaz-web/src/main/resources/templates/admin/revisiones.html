@@ -1,0 +1,142 @@
+<html lang="es" th:replace="~{layout/base_admin :: html}">
+    <div th:fragment="contenido">
+      <div class="notificaciones-header">
+        <h2>Revisiones de hechos</h2>
+        <div class="notificaciones-header-estado-revision-btns">
+          <span th:if="${estado.equals('TODOS')}" class="estado-revision-desactivado">Todas</span>
+          <a th:if="${!estado.equals('TODOS')}" class="estado-revision" th:href="@{/admin/revisiones}">Todas</a>
+          <span th:if="${estado.equals('PENDIENTE')}" class="estado-revision-desactivado">Pendientes</span>
+          <a th:if="${!estado.equals('PENDIENTE')}" class="estado-revision" th:href="@{/admin/revisiones(estado='PENDIENTE')}">Pendientes</a>
+          <span th:if="${estado.equals('ACEPTADO')}" class="estado-revision-desactivado">Aceptadas</span>
+          <a th:if="${!estado.equals('ACEPTADO')}" class="estado-revision" th:href="@{/admin/revisiones(estado='ACEPTADO')}">Aceptadas</a>
+          <span th:if="${estado.equals('RECHAZADO')}" class="estado-revision-desactivado">Rechazadas</span>
+          <a th:if="${!estado.equals('RECHAZADO')}" class="estado-revision" th:href="@{/admin/revisiones(estado='RECHAZADO')}">Rechazadas</a>
+        </div>
+      </div>
+      <div class="notificaciones-list" th:if="${revisiones.isEmpty() || revisiones == null}">
+        <h2 style="color: #a80404; margin-top: 20px;">
+          No se pudieron encontrar revisiones.
+        </h2>
+      </div>
+      <div class="notificaciones-list">
+        <div class="notificacion-card white-card-black-border" th:each="r : ${revisiones}">
+          <div class="notificacion-card-top">
+            <span class="notificacion-card-title" th:text="'Revisión del hecho #' + ${r.idHecho} + ' - ' + ${r.estadoRevision}"></span>
+            <div class="notificacion-card-top-btns" th:if="${r.estadoRevision.toString() == 'PENDIENTE'}">
+              <form th:action="@{/admin/revisiones/{id}/resolver(id=${r.idRevision})}" method="post">
+                <input type="hidden" name="idHecho" th:value="${r.idHecho}">
+                <input type="hidden" name="adminUsuario" th:value="${#authentication.name}">
+                <input type="hidden" name="estado" value="ACEPTADO">
+                <button type="button" class="notificacion-card-accept" onclick="aceptar(this.form)">
+                  <span>✓</span>
+                </button>
+              </form>
+              <form th:action="@{/admin/revisiones/{id}/resolver(id=${r.idRevision})}" method="post">
+                <input type="hidden" name="idHecho" th:value="${r.idHecho}">
+                <input type="hidden" name="adminUsuario" th:value="${#authentication.name}">
+                <input type="hidden" name="estado" value="ACEPTADO">
+                <button type="button" class="notificacion-card-accept-with-suggestion" onclick="aceptarConSugerencia(this.form)">
+                  <span>
+                    ✓<img src="/img/comment-svgrepo-com.svg" alt="sugerencia">
+                  </span>
+                </button>
+              </form>
+              <form th:action="@{/admin/revisiones/{id}/resolver(id=${r.idRevision})}" method="post">
+                <input type="hidden" name="idHecho" th:value="${r.idHecho}">
+                <input type="hidden" name="adminUsuario" th:value="${#authentication.name}">
+                <input type="hidden" name="estado" value="RECHAZADO">
+                <button type="button" class="notificacion-card-cancel" onclick="rechazar(this.form)">
+                  <span>X</span>
+                </button>
+              </form>
+            </div>
+          </div>
+          <div class="notificacion-card-content">
+            <h4 th:text="${r.tituloHecho}"></h4>
+            <p style="color: #9d9d9d;" th:text="'Creado por ' + ${r.nombreUsuario != null ? r.nombreUsuario : 'anónimo'} + ' el ' + ${#temporals.format(r.fechaCreacionHecho, 'dd/MM/yyyy')} + ' a las ' + ${#temporals.format(r.fechaCreacionHecho, 'HH:mm')} + 'hs'"></p>
+            <p style="color: #9d9d9d;" th:if="${r.estadoRevision.toString() != 'PENDIENTE'}" th:text="'Revisado por ' + ${r.nombreAdmin} + ' el ' + ${#temporals.format(r.fechaRevision, 'dd/MM/yyyy')} + ' a las ' + ${#temporals.format(r.fechaRevision, 'HH:mm')} + 'hs'"></p>
+            <p style="color: #9d9d9d;" class="notificacion-description" th:if="r.sugerencia != null" th:text="${r.sugerencia}"></p>
+          </div>
+          <div class="notificacion-card-bottom">
+            <a class="black-btn" th:href="@{/admin/revisiones/hecho/{id}(id=${r.idHecho})}">Ver hecho</a>
+          </div>
+        </div>
+        <div th:replace="~{fragments/pagination :: pagination}"></div>
+      </div>
+      <script th:inline="javascript">
+        function aceptar(form) {
+          Swal.fire({
+            icon: 'question',
+            title: '¿Desea aceptar el hecho?',
+            text: 'Una vez aceptado, el hecho va a estar visible para todos los usuarios.',
+            showCancelButton: true,
+            confirmButtonText: 'Confirmar',
+            cancelButtonText: 'Cancelar',
+            customClass: {
+              confirmButton: 'black-btn',
+              cancelButton: 'cancel-btn'
+            }
+          }).then((result) => {
+            if (result.isConfirmed) {
+              form.submit();
+            }
+          });
+        }
+
+        async function aceptarConSugerencia(form) {
+          const { value: sugerencia } = await Swal.fire({
+            icon: 'question',
+            title: '¿Desea aceptar el hecho?',
+            text: 'Una vez aceptado, el hecho va a estar visible para todos los usuarios.',
+            input: 'textarea',
+            inputPlaceholder: 'Escribe una sugerencia...',
+            showCancelButton: true,
+            confirmButtonText: 'Enviar',
+            cancelButtonText: 'Cancelar',
+            inputValidator: (value) => {
+              if (!value || value.trim().length === 0) {
+                return 'Debes escribir una sugerencia.';
+              }
+              else if (value.length > 250 || value.length < 10) {
+                return 'La sugerencia debe tener entre 10 y 250 caracteres.';
+              }
+            },
+            customClass: {
+              confirmButton: 'black-btn',
+              cancelButton: 'cancel-btn'
+            }
+          });
+          if (sugerencia) {
+            console.log(sugerencia);
+            let input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'sugerencia';
+            input.value = sugerencia;
+            form.appendChild(input);
+            form.submit();
+          }
+        }
+
+        function rechazar(form) {
+          Swal.fire({
+            icon: 'question',
+            title: '¿Desea rechazar el hecho?',
+            text: 'Una vez rechazado, el hecho no va a estar más disponible.',
+            showCancelButton: true,
+            confirmButtonText: 'Confirmar',
+            cancelButtonText: 'Cancelar',
+            customClass: {
+              confirmButton: 'black-btn',
+              cancelButton: 'cancel-btn'
+            }
+          }).then((result) => {
+            if (result.isConfirmed) {
+              form.submit();
+            }
+          });
+        }
+      </script>
+    </div>
+    <th:block th:fragment="scripts">
+    </th:block>
+</html>

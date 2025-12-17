@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es" th:replace="~{layout/base_mapa :: html}" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+    <div th:fragment="contenido" class="right-menu">
+        <div class="right-menu-hecho-header">
+            <div class="hecho-header-left">
+                <img src="/img/left-arrow-svgrepo-com.svg" alt="Volver" class="back-arrow" onclick="history.back()"/>
+                <h2 style="color: #232323" th:text="${hecho.titulo}">Nombre hecho</h2>
+            </div>
+            <div class="hecho-header-right" th:if="${revision == null || !revision}">
+                <a th:unless="${esMetamapa != null && esMetamapa}" th:href="@{/hechos/{id}/crear-solicitud(id=${hecho.id})}">
+                    <img src="/img/delete-svgrepo-com.svg" class="delete-btn" alt="Eliminar">
+                </a>
+                <a th:if="${esMetamapa != null && esMetamapa}" th:href="@{/hechos/{id}/crear-solicitud(id=${hecho.id},metamapa=${metamapa})}">
+                    <img src="/img/delete-svgrepo-com.svg" class="delete-btn" alt="Eliminar">
+                </a>
+            </div>
+        </div>
+        <div class="hecho-container">
+            <div th:if="${hecho.multimedia != null && !hecho.multimedia.isEmpty()}">
+                <div id="hechoCarousel" class="f-carousel hecho-carousel">
+                    <div class="f-carousel__slide" style="display: flex;"
+                         th:each="mm : ${hecho.multimedia}">
+
+                        <img th:if="${mm.tipo == 'image'}"
+                             th:src="${'https://res.cloudinary.com/dpjnfcu3r/image/upload/f_auto,q_auto,w_450/' + mm.publicId}"
+                             alt="Imagen del hecho" class="hecho-slide-media"/>
+
+                        <video th:if="${mm.tipo == 'video'}"
+                               class="hecho-slide-media"
+                               controls
+                               preload="metadata"
+                               playsinline>
+                            <source th:src="${'https://res.cloudinary.com/dpjnfcu3r/video/upload/q_auto/' + mm.publicId}" type="video/mp4"/>
+                        </video>
+                    </div>
+                </div>
+            </div>
+            <div class="hecho-info">
+                <span th:text="${hecho.categoria}"></span>
+                <span th:if="${hecho.departamento != null && hecho.provincia != null}" th:text="${hecho.departamento} + ', ' + ${hecho.provincia}"></span>
+                <span th:text="${#temporals.format(hecho.fechaHecho, 'dd-MM-yyyy')}"></span>
+                <span th:text="${#temporals.format(hecho.fechaHecho, 'hh:mm') + 'hs'}"></span>
+                <div th:if="${revision == null || !revision}">
+                    <div class="black-tag" th:each="e : ${hecho.etiquetas}" th:text="${e}"></div>
+                </div>
+            </div>
+            <div class="barra-divisora"></div>
+            <div class="hecho-descripcion">
+                <p th:text="${hecho.descripcion}"></p>
+            </div>
+            <div class="barra-divisora"></div>
+            <div class="hecho-info-adicional">
+                <div th:if="${hecho.fuente != null}" class="hecho-info-adicional-item">
+                    Fuente: <span th:text="${hecho.fuente}"></span>
+                </div>
+                <div th:if="${hecho.origenHecho != null}" class="hecho-info-adicional-item">
+                    Origen: <span th:text="${hecho.origenHecho}"></span>
+                </div>
+                <div th:if="${hecho.origenHecho == null}" class="hecho-info-adicional-item">
+                    Origen: <span>Anónimo</span>
+                </div>
+                <div th:if="${hecho.fechaCarga != null}" class="hecho-info-adicional-item">
+                    Fecha de carga:
+                    <span th:text="${#temporals.format(hecho.fechaCarga, 'dd-MM-yyyy') + ' a las ' + #temporals.format(hecho.fechaHecho, 'hh:mm') + 'hs'}"></span>
+                </div>
+            </div>
+        </div>
+        <script defer src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/carousel/carousel.umd.js"></script>
+        <script th:inline="javascript">
+            document.addEventListener('DOMContentLoaded', () => {
+                const el = document.getElementById('hechoCarousel');
+                if (!el || !window.Carousel) return;
+
+                const carousel = new Carousel(el, {
+                    infinite: false,
+                    Dots: true,
+                    Navigation: true,
+                    center: true,
+                    friction: 0.92,
+                    transition: 'slide',
+                });
+
+                window._hechoCarousel = carousel;
+            });
+        </script>
+    </div>
+</html>

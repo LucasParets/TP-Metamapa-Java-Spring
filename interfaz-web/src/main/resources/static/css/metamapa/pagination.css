@@ -1,0 +1,28 @@
+.pagination {
+    display: flex;
+    margin-top: 20px;
+    gap: .25rem;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.page-btn,.page-num {
+    border: 1px solid #ccc;
+    background: #fff;
+    padding: .5rem .7rem;
+    border-radius: .6rem;
+    cursor: pointer;
+}
+
+.page-num.is-active {
+    background: #2563eb;
+    color: #fff;
+    border-color: #2563eb;
+    font-weight: 600;
+}
+
+.page-btn:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}

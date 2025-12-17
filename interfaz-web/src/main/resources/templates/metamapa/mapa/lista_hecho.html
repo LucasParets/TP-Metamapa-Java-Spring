@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es" th:replace="~{layout/base_mapa :: html}">
+    <div th:fragment="contenido" class="right-menu">
+        <div class="right-menu-header">
+            <h3 th:text="${coleccion != null ? coleccion.titulo : titulo}"></h3>
+<!--            <small th:text="'Se encontraron ' + ${cantHechos} + ' hechos'"></small>-->
+        </div>
+
+        <div class="collection-filter">
+            <div class="search-container">
+                <div class="search-bar" th:object="${filtros}">
+                    <label for="q"></label>
+                    <input id="q" type="text" name="q" placeholder="Buscar hechos..." th:field="*{q}"/>
+                    <input type="hidden" name="page" value="0"/>
+                    <button type="button" class="icon search" onclick="buscar()" aria-label="Buscar">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="8" cy="8" r="6"></circle>
+                            <line x1="14" y1="14" x2="20" y2="20"></line>
+                        </svg>
+                    </button>
+
+                </div>
+                <a onclick="mostrarFiltros()" class="icon filter" aria-label="Filtrar">
+                    <img src="/img/filter-svgrepo-com.svg" alt="filter-icon">
+                </a>
+            </div>
+
+            <div class="filtros-container">
+                <form method="get" th:object="${filtros}" class="filtros">
+                    <input type="hidden" name="page" value="0"/>
+
+                    <section th:if="${mostrarConsenso}" class="filter-row">
+                        <div class="field">
+                            <label class="lbl">Modo de navegación:</label>
+
+                            <!-- Segmentado con radios -->
+                            <div class="segmented">
+                                <input type="radio" id="modo-ir" th:field="*{modo_navegacion}" value="IRRESTRICTA" />
+                                <label for="modo-ir">Irrestricta</label>
+
+                                <input type="radio" id="modo-cu" th:field="*{modo_navegacion}" value="CURADA" />
+                                <label for="modo-cu">Curada</label>
+
+                                <button type="button" class="info-btn" onclick="infoModoNavegacion()" aria-label="¿Qué es esto?">
+                                    <img src="/img/info-circle-svgrepo-com.svg" alt="info-modo-navegacion">
+                                </button>
+                            </div>
+
+                            <small class="hint">
+                                Irrestricta: muestra todos los hechos.
+                                Curada: muestra sólo hechos con consenso.
+                            </small>
+                        </div>
+                    </section>
+
+                    <div id="categoria-select">
+                        <label for="categoria-select-input">Categoría:</label>
+                        <select id="categoria-select-input" th:field="*{categoria}" name="categoria">
+                            <option value="">Seleccione una categoría</option>
+                            <option th:each="categoria : ${categorias}"
+                                    th:value="${categoria.nombre}"
+                                    th:text="${categoria.nombre}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <label for="fecha_hecho_desde">Fecha del hecho desde:</label>
+                    <input min="1990-01-01T00:00" th:attr="max=${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd''T''HH:mm')}" th:field="*{fecha_hecho_desde}" type="datetime-local" class="form-hecho-input" id="fecha_hecho_desde" name="fecha_hecho_desde" placeholder="Fecha del hecho desde">
+
+                    <label for="fecha_hecho_hasta">Fecha del hecho hasta:</label>
+                    <input min="1990-01-01T00:00" th:attr="max=${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd''T''HH:mm')}" th:field="*{fecha_hecho_desde}" type="datetime-local" class="form-hecho-input" id="fecha_hecho_hasta" name="fecha_hecho_hasta" placeholder="Fecha del hecho hasta">
+
+                    <div class="select-container" th:object="${pg}">
+                        <label for="sort">Ordenar por:</label>
+                        <select id="sort" name="sort" th:field="*{sort}">
+                            <option value="fechaHecho,desc">Sucesos recientes</option>
+                            <option value="fechaHecho,asc">Sucesos antiguos</option>
+                            <option value="fechaCarga,desc">Cargas recientes</option>
+                            <option value="fechaCarga,asc">Cargas antiguas</option>
+                            <option value="titulo,asc">Título A–Z</option>
+                            <option value="titulo,desc">Título Z–A</option>
+                        </select>
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end;">
+                        <button type="button" class="cancel-btn" style="background: #fff; margin-right: 10px; border: 1px solid #222;" onclick="limpiarFiltros()">Limpiar filtros</button>
+                        <input type="button" class="black-btn" onclick="aplicarFiltros()" value="Aplicar filtros">
+                    </div>
+                </form>
+            </div>
+
+            <div class="tags" th:if="${filtrosActivos != null && !filtrosActivos.isEmpty()}">
+                <div class="tag" th:each="filtro : ${filtrosActivos}">
+                    <span th:text="${filtro}">Tag</span>
+                    <span class="remove" th:onclick="'quitarFiltro(\'' + ${filtro} + '\')'">×</span>
+                </div>
+            </div>
+            <div class="separator"></div>
+        </div>
+
+        <div class="hechos-list">
+            <div th:if="${hechos != null && !hechos.isEmpty()}">
+                <div class="hecho-card" th:each="hecho : ${hechos}">
+                    <h4 th:text="${hecho.titulo}">Nombre hecho</h4>
+                    <p>Categoría: <span th:text="${hecho.categoria != null ? hecho.categoria : 'Sin categoría'}">Categoría</span></p>
+                    <p>Fecha: <span th:text="${hecho.fechaHecho != null ? #temporals.format(hecho.fechaHecho, 'dd/MM/yyyy HH:mm') + 'hs' : 'Sin fecha'}">Sin fecha</span></p>
+                    <a th:unless="${esMetamapa != null && esMetamapa}" th:href="@{/hechos/{id}(id=${hecho.id})}">Ver más</a>
+                    <a th:if="${esMetamapa != null && esMetamapa}" th:href="@{/metamapa/hechos/{id}(id=${hecho.id},metamapa=${metamapa})}">Ver más</a>
+                </div>
+            </div>
+            <div th:if="${hechos == null || hechos.isEmpty()}" class="no-hechos">
+                No hay hechos en esta colección
+            </div>
+            <div th:replace="~{fragments/pagination :: pagination}"></div>
+        </div>
+        <script th:inline="javascript">
+            function buscar() {
+                const u = new URL(window.location);
+                let v = document.getElementById('q').value;
+
+                if (v) {
+                    v = v.trim();
+                    if (v !== '' && v.length >= 3)
+                        u.searchParams.set('q', v);
+                }
+                else u.searchParams.delete('q');
+
+                u.searchParams.set('page', '0');
+
+                window.location = u.pathname + '?' + u.searchParams.toString();
+            }
+
+            document.getElementById('q').addEventListener('keydown', e => {
+                if (e.key === 'Enter') { e.preventDefault(); buscar(); }
+            });
+
+            function mostrarFiltros() {
+                const filtros = document.querySelector('.filtros-container');
+                filtros.style.display = filtros.style.display === 'flex' ? 'none' : 'flex';
+            }
+
+            const f_h_desde = document.getElementById('fecha_hecho_desde');
+            const f_h_hasta = document.getElementById('fecha_hecho_hasta');
+
+            function validarRangoFecha() {
+                const d = f_h_desde.value;
+                const h = f_h_hasta.value;
+
+                const now = new Date(Date.now() - new Date().getTimezoneOffset()*60000)
+                    .toISOString().slice(0,16);
+
+                h.min = d || '1990-01-01T00:00';
+                d.max = h || now;
+
+                if (d.value > h.value) {
+                    h.value = d.value;
+                }
+            }
+
+            ['input','change','blur'].forEach(evt => {
+                f_h_desde.addEventListener(evt, validarRangoFecha);
+                f_h_hasta.addEventListener(evt, validarRangoFecha);
+            });
+
+            function aplicarFiltros() {
+                const form = document.querySelector('.filtros-container form');
+                const fields = form.querySelectorAll('input[name], select[name]');
+                const u = new URL(window.location);
+
+                fields.forEach(e => {
+                    const val = (e.value ?? '').trim();
+                    if (val === '') e.disabled = true;
+                })
+
+                form.action = u.pathname
+
+                form.submit();
+            }
+            function limpiarFiltros() {
+                window.location = window.location.pathname;
+            }
+
+            function infoModoNavegacion() {
+                if (window.Swal) {
+                    Swal.fire({
+                        title: 'Modos de navegación',
+                        html: `
+                          <div style="text-align:justify">
+                            <br>
+                            <p><b>Irrestricta</b>: se muestran <i>todos</i> los hechos, sin curación.</p>
+                            <br>
+                            <p><b>Curada</b>: se muestran sólo los hechos para los que hay <i>consenso</i>.
+                            El algoritmo con el cual se determina el consenso depende de la colección.</p>
+                          </div>`,
+                        icon: 'info',
+                        confirmButtonText: 'Entendido'
+                    });
+                } else {
+                    alert('Irrestricta: todos los hechos.\nCurada: sólo hechos con consenso.');
+                }
+            }
+        </script>
+    </div>
+</html>

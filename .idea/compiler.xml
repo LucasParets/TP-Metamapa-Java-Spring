@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Annotation profile for metamapa" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.32/lombok-1.18.32.jar" />
+        </processorPath>
+        <module name="servicio-agregacion" />
+        <module name="fuente-dinamica" />
+        <module name="servicio-estadisticas" />
+        <module name="servicio-auth" />
+        <module name="fuente-estatica" />
+      </profile>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="fuente-proxy" />
+        <module name="servicio-discovery" />
+        <module name="servicio-gateway" />
+      </profile>
+      <profile name="Annotation profile for interfaz-web" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.40/lombok-1.18.40.jar" />
+        </processorPath>
+        <module name="interfaz-web" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="gs-multi-module" target="1.5" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="fuente-dinamica" options="-parameters" />
+      <module name="fuente-estatica" options="-parameters" />
+      <module name="fuente-proxy" options="-parameters" />
+      <module name="interfaz-web" options="-parameters" />
+      <module name="servicio-agregacion" options="-parameters" />
+      <module name="servicio-auth" options="-parameters" />
+      <module name="servicio-discovery" options="-parameters" />
+      <module name="servicio-estadisticas" options="-parameters" />
+      <module name="servicio-gateway" options="-parameters" />
+    </option>
+  </component>
+</project>

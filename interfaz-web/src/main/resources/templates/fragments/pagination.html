@@ -1,0 +1,28 @@
+<div th:fragment="pagination" class="pagination"
+     th:if="${totalPages > 1}"
+     th:with="
+                    curr=${currentPage},
+                    last=${totalPages - 1},
+                    start=${curr - 2 < 0 ? 0 : curr - 2},
+                    end=${curr + 2 > last ? last : curr + 2}">
+    <button class="page-btn" onclick="gotoPage(0)" th:disabled="${pageFirst}">«</button>
+    <button class="page-btn" th:onclick="|gotoPage(${curr - 1})|" th:disabled="${pageFirst}">‹</button>
+
+    <button class="page-num"
+            th:each="i : ${#numbers.sequence(start, end)}"
+            th:text="${i + 1}"
+            th:classappend="${i} == ${curr} ? ' is-active' : ''"
+            th:onclick="|gotoPage(${i})|"></button>
+
+    <button class="page-btn" th:onclick="|gotoPage(${curr + 1})|" th:disabled="${pageLast}">›</button>
+    <button class="page-btn" th:onclick="|gotoPage(${last})|"    th:disabled="${pageLast}">»</button>
+    <script th:inline="javascript">
+        function gotoPage(n){
+            n = Number(n);
+            if (Number.isNaN(n)) return;
+            const u = new URL(window.location);
+            u.searchParams.set('page', String(n));
+            window.location = u.pathname + '?' + u.searchParams.toString();
+        }
+    </script>
+</div>

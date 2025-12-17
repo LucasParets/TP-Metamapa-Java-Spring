@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es"  xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+  <head>
+    <meta charset="UTF-8">
+    <title th:text="${titulo} + ' - MetaMapa'"></title>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+      <link rel="stylesheet" th:href="@{/css/metamapa/metamapa.css}">
+      <link rel="stylesheet" th:href="@{/css/metamapa/sidebar.css}">
+      <link rel="stylesheet" th:href="@{/css/metamapa/mapa.css}"/>
+      <link rel="stylesheet" th:href="@{/css/metamapa/detalle_hecho.css}"/>
+      <link rel="stylesheet" th:href="@{/css/metamapa/crear_hecho.css}"/>
+      <link rel="stylesheet" th:href="@{/css/metamapa/pagination.css}"/>
+      <link rel="stylesheet" th:href="@{/css/metamapa/multimedia.css}"/>
+      <link rel="stylesheet" th:href="@{/css/metamapa/carousel.css}"/>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/carousel/carousel.css">
+      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+      <meta name="_csrf" th:content="${_csrf.token}"/>
+      <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  </head>
+  <body>
+      <nav class="metamapa-header">
+        <div class="logo">MetaMapa</div>
+        <div class="nav-buttons" sec:authorize="isAnonymous()">
+          <a class="btn-login" th:href="@{/login}">Iniciar sesión</a>
+          <a class="btn-registro" th:href="@{/registrarse}">Registrarme</a>
+        </div>
+        <div class="user-info-container" sec:authorize="isAuthenticated()">
+          <img class="user-avatar" src="/img/avatar.webp" alt="Avatar">
+          <span class="user-nombre" th:text="${#authentication.name.substring(0,1).toUpperCase() + #authentication.name.substring(1)}"></span>
+        </div>
+      </nav>
+      <aside class="sidebar-container">
+        <div class="sidebar-menu-container" id="sidebar-menu-container">
+            <a th:href="@{/inicio}">Inicio</a>
+            <a th:href="@{/colecciones}">Colecciones</a>
+            <a th:href="@{/metamapa/colecciones}">Colecciones externas</a>
+            <a th:href="@{/hechos/crear}">Crear hecho</a>
+            <a sec:authorize="hasRole('USER')" th:href="@{/mis-hechos}">Mis hechos</a>
+            <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin}">Administrador</a>
+            <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
+                <button class="logout-btn" th:href="@{/logout}">Cerrar sesión</button>
+            </form>
+        </div>
+        <div class="sidebar-btn-container" id="sidebar-btn-container">
+          <span class="sidebar-btn" onclick="openCloseSidebar()">☰</span>
+        </div>
+      </aside>
+
+      <div class="coleccion-mapa-container">
+          <div class="wrapper">
+              <div class="content">
+                  <div id="map" style="height: 100%; width: 100%;"></div>
+              </div>
+          </div>
+
+        <div class="right-menu" th:replace="~{${contenido} :: contenido}"></div>
+      </div>
+
+      <script th:src="@{/js/sidebar.js}"></script>
+      <script th:inline="javascript">
+          var hecho = /*[[${hecho}]]*/{};
+
+          var map;
+
+          if (hecho != null && hecho.longitud && hecho.latitud) {
+              map = L.map('map', { preferCanvas: true }).setView([hecho.latitud, hecho.longitud], 12);
+              L.marker([hecho.latitud, hecho.longitud]).addTo(map);
+          }
+          else {
+              map = L.map('map', { preferCanvas: true }).setView([-34.6037, -58.3816], 5);
+          }
+
+
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+              maxZoom: 19
+          }).addTo(map);
+
+          var titulo = /*[[${titulo}]]*/{};
+
+          if (titulo === "Hechos") {
+
+              let apiGatewayUrl = /*[[${api_gateway}]]*/{};
+
+              if (apiGatewayUrl.length === 0) {
+                  Swal.fire({
+                          "icon": "error",
+                          "title": "¡Error!",
+                          "text": "No se pudieron cargar los hechos en el mapa",
+                          "confirmButtonText": "Aceptar"
+                  });
+              }
+              else {
+                  const markers = L.markerClusterGroup?.() || L.layerGroup();
+                  map.addLayer(markers);
+
+                  let debounce;
+
+                  map.on('moveend zoomend', () => {
+                      clearTimeout(debounce);
+                      debounce = setTimeout(loadHechosForView, 500);
+                  });
+
+                  async function loadHechosForView() {
+                      const c = /*[[${coleccion}]]*/{};
+                      const b = map.getBounds();
+                      const p = new URL(window.location).searchParams;
+                      const params = new URLSearchParams({
+                          n: b.getNorth(), s: b.getSouth(),
+                          e: b.getEast(),   w: b.getWest(),
+                          limit: 150
+                      });
+                      p.delete('page');
+                      p.delete('size');
+
+                      const handle = c !== null ? c.handle : null;
+
+                      if (handle != null)
+                        params.set('handle', handle);
+
+                      let url = apiGatewayUrl + `/agregador/public/hechos/mapa?${params}`;
+
+                      if (p.size > 0) {
+                          url += `&${p}`;
+                      }
+
+                      const res = await fetch(url);
+                      const geo = await res.json();
+
+                      markers.clearLayers();
+                      L.geoJSON(geo, {
+                          pointToLayer: (_, latlng) => L.marker(latlng),
+                          onEachFeature: (feature, layer) => {
+                              const p = feature.geometry.properties || {};
+                              const html = `
+                              <div class="popup">
+                                <h4 style="margin:.25rem 0;">${p.titulo}</h4>
+                                <div style="color:#6b7280;font-size:.9rem;margin-bottom:.5rem;">
+                                  ${p.categoria ?? ''} - ${p.fecha}
+                                </div>
+                                <a type="button" href="/hechos/${p.id}">Ver detalle</a>
+                              </div>
+                            `;
+                              layer.bindPopup(html);
+                          }
+                      }).addTo(markers);
+                  }
+
+                  loadHechosForView();
+              }
+          }
+
+          if(titulo === "Crear Hecho" || titulo === "Editar Hecho") {
+              var marker_crear_hecho;
+              map.on('click', function(e){
+                  if (marker_crear_hecho) {
+                      map.removeLayer(marker_crear_hecho);
+                  }
+                  var coord = e.latlng;
+                  var lat = coord.lat;
+                  var lng = coord.lng;
+                  marker_crear_hecho = L.marker([lat, lng]).addTo(map);
+                  document.getElementById("crear_hecho_latitud").value = lat;
+                  document.getElementById("crear_hecho_longitud").value = lng;
+                  console.log("You clicked the map at latitude: " + lat + " and longitude: " + lng);
+              });
+          }
+
+      </script>
+      <th:block th:replace="~{fragments/alerta :: swal}"></th:block>
+  </body>
+</html>

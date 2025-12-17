@@ -1,0 +1,169 @@
+<html lang="es" th:replace="~{layout/base_admin :: html}">
+    <div th:fragment="contenido" class="crear-coleccion-container">
+        <div class="crear-coleccion-card white-card-black-border" style="margin: 5rem 0;">
+            <div class="criterios-panel-header">
+                <h2>Exportar estadísticas</h2>
+                <button class="black-btn" onclick="mostrarFormNuevoCriterio()">Agregar criterio</button>
+            </div>
+
+            <div id="criterios-container">
+                <div class="criterio-item">
+                    <label for="estadistica">Estadísticas disponibles:</label>
+                    <select id="estadistica" name="estadistica" class="criterio-select" onchange="actualizarParametros(this)">
+                        <option value="">Seleccione una opción</option>
+                        <option value="provincias_top">Provincias con más hechos por colección</option>
+                        <option value="categoria_top">Categoría con más hechos por mes</option>
+                        <option value="provincia_top_x_categoria">Provincia con más hechos de una categoría</option>
+                        <option value="horario_top_x_categoria">Horario con más hechos de una categoría</option>
+                        <option value="cant_spam">Cantidad de solicitudes de eliminación que son spam</option>
+                    </select>
+                    <div id="categoria-select">
+                        <label for="categoria-select-input">Categoría:</label>
+                        <select id="categoria-select-input" name="parametros['categoria']">
+                            <option value="">Seleccione una categoría</option>
+                            <option th:each="categoria : ${categorias}"
+                                    th:value="${categoria.id}"
+                                    th:text="${categoria.nombre}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="parametros-container" style="width: 100%; flex-direction: column;" id="params-nuevo">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script th:inline="javascript">
+            addEventListener('DOMContentLoaded', () => {
+                document.getElementById('categoria-select').style.display = 'none';
+                document.getElementById('categoria-select-input').required = false;
+            })
+            function actualizarParametros(select) {
+                const paramsContainer = document.getElementById('params-nuevo');
+                paramsContainer.innerHTML = '';
+                document.getElementById('categoria-select').style.display = 'none';
+                document.getElementById('categoria-select-input').required = false;
+
+                const tipoEstadistica = select.value;
+
+                switch (tipoEstadistica) {
+                    case 'provincias_top':
+                        agregarBtnExportarConIntervaloFechas(paramsContainer, tipoEstadistica);
+                        break;
+                    case 'categoria_top':
+                        agregarBtnExportar(paramsContainer, tipoEstadistica);
+                        break;
+                    case 'provincia_top_x_categoria':
+                        agregarElegirCategoriaYBtnExportar(paramsContainer, tipoEstadistica);
+                        break;
+                    case 'horario_top_x_categoria':
+                        agregarElegirCategoriaYBtnExportar(paramsContainer, tipoEstadistica);
+                        break;
+                    case 'cant_spam':
+                        agregarBtnExportar(paramsContainer, tipoEstadistica);
+                        break;
+                }
+            }
+
+            function agregarBtnExportar(container, nombre) {
+                const link = document.createElement('a');
+                let urlApi = /*[[${urlApi}]]*/ '';
+                link.href = urlApi + '/' + nombre + '/csv';
+                link.textContent = 'Exportar';
+                link.className = 'black-btn';
+                link.style.textAlign = 'center';
+                container.appendChild(link);
+            }
+
+            function agregarElegirCategoriaYBtnExportar(container, tipoEstadistica) {
+                const btn = document.createElement('button');
+                let urlApi = /*[[${urlApi}]]*/ "";
+                document.getElementById('categoria-select').style.display = 'flex';
+                document.getElementById('categoria-select-input').required = true;
+                btn.textContent = 'Exportar';
+                btn.className = 'black-btn';
+                btn.onclick = () => {
+                    let categoria = document.getElementById('categoria-select-input').value;
+                    if (categoria.trim() !== '') {
+                        window.location.href = urlApi + '/' + tipoEstadistica + '/' + categoria + '/csv';
+                    }
+                    else {
+                        container.appendChild(crearMensajeError("Debe elegir una categoría"))
+                    }
+                }
+                container.appendChild(btn);
+            }
+
+            function agregarBtnExportarConIntervaloFechas(container, tipoEstadistica) {
+                crearInputFecha(container, 'desde');
+                crearInputFecha(container, 'hasta');
+                const btn = document.createElement('button');
+                let urlApi = /*[[${urlApi}]]*/ "";
+                btn.textContent = 'Exportar';
+                btn.className = 'black-btn';
+                btn.onclick = () => {
+                    const f_desde = document.getElementById('fecha_desde');
+                    const f_hasta = document.getElementById('fecha_hasta');
+                    if (f_desde.value != null && f_hasta.value != null && (f_desde.value.trim() !== '' && f_hasta.value.trim() !== '')) {
+                        window.location.href = urlApi + '/' + tipoEstadistica + '/csv?desde=' + f_desde.value + '&hasta=' + f_hasta.value;
+                    }
+                    else {
+                        container.appendChild(crearMensajeError('Debe seleccionar ambas fechas'));
+                    }
+                }
+                container.appendChild(btn);
+            }
+
+            function crearInputFecha(container, tipo) {
+                const div = document.createElement('div');
+                div.style.display = 'flex';
+                div.style.flexDirection = 'column';
+                div.style.gap = '0.5rem';
+                div.style.marginBottom = '5px';
+
+                const label = document.createElement('label');
+                label.textContent = "Fecha " + tipo + ":";
+
+                const input = document.createElement('input');
+                input.type = 'datetime-local';
+                input.name = tipo;
+                input.id = 'fecha_' + tipo;
+                input.className = 'parametro-input';
+                input.required = true;
+                input.min = '1990-01-01T00:00';
+
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+
+                input.max = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+                input.style.padding = '8px';
+                input.style.borderRadius = '4px';
+                input.style.border = '1px solid #ddd';
+
+                div.appendChild(label);
+                div.appendChild(input);
+                container.appendChild(div);
+            }
+
+            function crearMensajeError(msj) {
+                if (document.getElementById('mensaje-error')) {
+                    document.getElementById('mensaje-error').remove();
+                }
+                const div = document.createElement('div');
+                div.style.color = 'red';
+                div.textContent = msj;
+                div.style.marginBottom = '1rem';
+                div.id = 'mensaje-error';
+                return div;
+            }
+        </script>
+    </div>
+
+    <th:block th:fragment="scripts">
+    </th:block>
+</html>

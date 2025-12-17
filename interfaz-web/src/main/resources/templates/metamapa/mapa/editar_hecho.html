@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es" th:replace="~{layout/base_mapa :: html}">
+    <div th:fragment="contenido"  class="right-menu">
+        <div class="right-menu-hecho-header">
+            <div class="hecho-header-left">
+                <img src="/img/left-arrow-svgrepo-com.svg" alt="Volver" class="back-arrow" onclick="history.back()"/>
+                <h2 style="color: #232323">Editar hecho</h2>
+            </div>
+        </div>
+        <div class="hecho-container">
+            <form th:action="@{/mis-hechos/{id}/actualizar(id=${hecho.id})}" th:object="${hecho}" class="form-hecho" method="post" enctype="multipart/form-data">
+                <label class="form-hecho-label" for="titulo">Título del hecho:</label>
+                <input class="form-hecho-input" type="text" id="titulo" name="titulo" th:field="*{titulo}" placeholder="Ingrese el titulo" required>
+
+                <label class="form-hecho-label" for="descripcion">Descripción:</label>
+                <textarea th:field="*{descripcion}" class="form-hecho-textarea" id="descripcion" name="descripcion" rows="4" placeholder="Ingrese una breve descripción..." required></textarea>
+
+                <div id="categoria-select">
+                    <label for="categoria-select-input">Categoría:</label>
+                    <select id="categoria-select-input" name="parametros['categoria']" th:field="*{categoria}">
+                        <option value="">Seleccione una categoría</option>
+                        <option th:each="categoria : ${categorias}"
+                                th:value="${categoria.nombre}"
+                                th:text="${categoria.nombre}">
+                        </option>
+                    </select>
+                </div>
+
+                <label class="form-hecho-label" for="crear_hecho_latitud">Latitud:</label>
+                <input class="form-hecho-input" type="number" id="crear_hecho_latitud" name="latitud" th:field="*{latitud}" placeholder="Marque en el mapa..." readonly required>
+
+                <label class="form-hecho-label" for="crear_hecho_longitud">Longitud:</label>
+                <input class="form-hecho-input" type="number" id="crear_hecho_longitud" name="longitud" th:field="*{longitud}" placeholder="Marque en el mapa..." readonly required>
+
+                <label class="form-hecho-label" for="fecha_hecho">Fecha del hecho:</label>
+                <input min="1990-01-01T00:00" th:attr="max=${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd''T''HH:mm')}" class="form-hecho-input" type="datetime-local" id="fecha_hecho" name="fecha_hecho" th:field="*{fechaHecho}" required>
+
+                <div class="form-hecho-btns">
+                    <a onclick="history.back()" class="cancel-btn">Cancelar</a>
+                    <button class="black-btn form-hecho-submit-btn" type="submit">Guardar</button>
+                </div>
+            </form>
+        </div>
+        <script th:inline="javascript">
+            window.addEventListener("load", () => {
+                let fecha = new Date(/*[[${hecho.fechaHecho}]]*/);
+                document.getElementById("fecha_hecho").value = fecha.toISOString().slice(0, 16);
+            });
+        </script>
+    </div>
+</html>

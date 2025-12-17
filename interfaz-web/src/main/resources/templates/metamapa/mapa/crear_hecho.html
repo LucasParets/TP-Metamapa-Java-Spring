@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es" th:replace="~{layout/base_mapa :: html}">
+    <div th:fragment="contenido"  class="right-menu">
+        <div class="right-menu-hecho-header">
+            <div class="hecho-header-left">
+                <img src="/img/left-arrow-svgrepo-com.svg" alt="Volver" class="back-arrow" onclick="history.back()"/>
+                <h2 style="color: #232323">Crear hecho</h2>
+            </div>
+        </div>
+        <div class="hecho-container">
+            <form th:action="@{/hechos/nuevo}" th:object="${hecho}" class="form-hecho" method="post">
+                <label class="form-hecho-label" for="titulo">Título del hecho:</label>
+                <input class="form-hecho-input" type="text" id="titulo" name="titulo" th:field="*{titulo}" placeholder="Ingrese el titulo" required>
+
+                <label class="form-hecho-label" for="descripcion">Descripción:</label>
+                <textarea th:field="*{descripcion}" class="form-hecho-textarea" id="descripcion" name="descripcion" rows="4" placeholder="Ingrese una breve descripción..." required></textarea>
+
+                <div id="categoria-select">
+                    <label for="categoria-select-input">Categoría:</label>
+                    <select th:field="*{categoria}" id="categoria-select-input" name="parametros['categoria']">
+                        <option value="">Seleccione una categoría</option>
+                        <option th:each="categoria : ${categorias}"
+                                th:value="${categoria.nombre}"
+                                th:text="${categoria.nombre}">
+                        </option>
+                    </select>
+                </div>
+
+                <label class="form-hecho-label" for="crear_hecho_latitud">Latitud:</label>
+                <input class="form-hecho-input" type="number" id="crear_hecho_latitud" name="latitud" th:field="*{latitud}" placeholder="Marque en el mapa..." readonly required>
+
+                <label class="form-hecho-label" for="crear_hecho_longitud">Longitud:</label>
+                <input class="form-hecho-input" type="number" id="crear_hecho_longitud" name="longitud" th:field="*{longitud}" placeholder="Marque en el mapa..." readonly required>
+
+                <label class="form-hecho-label" for="fecha_hecho">Fecha del hecho:</label>
+                <input  min="1990-01-01T00:00" th:attr="max=${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd''T''HH:mm')}"  class="form-hecho-input" type="datetime-local" id="fecha_hecho" name="fecha_hecho" th:field="*{fechaHecho}" required>
+
+                <div class="form-hecho-media">
+                    <label class="form-hecho-label">Multimedia (fotos y/o videos):</label>
+
+                    <input id="mediaInput" type="file" accept="image/*,video/*" multiple style="display:none">
+                    <div class="media-actions">
+                        <button type="button" id="btnPickMedia" class="black-btn">Seleccionar archivos</button>
+                        <span class="media-hint">JPG/PNG/WEBP (≤3 MB) · MP4/WEBM/MOV (≤50 MB)</span>
+                    </div>
+
+                    <div id="mediaGrid" class="media-grid"></div>
+
+                    <input type="hidden" id="mediaJson" name="mediaJson">
+                </div>
+
+                <div class="form-hecho-btns">
+                    <a onclick="history.back()" class="cancel-btn">Cancelar</a>
+                    <button class="black-btn form-hecho-submit-btn" type="submit">Crear</button>
+                </div>
+            </form>
+        </div>
+        <script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript"></script>
+        <script th:inline="javascript">
+            (() => {
+                const CLOUD_NAME    = 'dpjnfcu3r';
+                const UPLOAD_PRESET = 'metamapa';
+                const FOLDER        = 'metamapa/hechos';
+
+                const IMAGE_MAX = 3 * 1024 * 1024;
+                const VIDEO_MAX = 50 * 1024 * 1024;
+                const ALLOWED_EXT = new Set(['jpg','jpeg','png','webp','mp4','webm','mov']);
+
+                const pickBtn = document.getElementById('btnPickMedia');
+                const input   = document.getElementById('mediaInput');
+                const grid    = document.getElementById('mediaGrid');
+                const hidden  = document.getElementById('mediaJson');
+                const form    = document.querySelector('form.form-hecho');
+
+                // Estado: archivos seleccionados (aún no subidos)
+                // Cada item: { file, url, type, name, size, ext }
+                const selected = [];
+
+                pickBtn.addEventListener('click', () => input.click());
+
+                input.addEventListener('change', () => {
+                    const files = Array.from(input.files || []);
+                    files.forEach(f => tryAddFile(f));
+                    input.value = '';
+                    render();
+                });
+
+                function tryAddFile(file){
+                    const type = (file.type || '').toLowerCase();
+                    const name = (file.name || '');
+                    const ext  = (name.split('.').pop() || '').toLowerCase();
+
+                    if (!ALLOWED_EXT.has(ext)) {
+                        toast(`Formato no permitido: .${ext}`); return;
+                    }
+
+                    const isImage = type.startsWith('image/');
+                    const isVideo = type.startsWith('video/');
+                    if (isImage && file.size > IMAGE_MAX) { toast(`Imagen supera 3 MB: ${name}`); return; }
+                    if (isVideo && file.size > VIDEO_MAX) { toast(`Video supera 50 MB: ${name}`); return; }
+
+                    if (!isImage && !isVideo) {
+                        toast(`Tipo no soportado: ${type}`);
+                        return;
+                    }
+
+                    selected.push({
+                        file, url: URL.createObjectURL(file),
+                        type: isImage ? 'image' : 'video',
+                        name, size: file.size, ext
+                    });
+                }
+
+                function render(){
+                    grid.innerHTML = '';
+                    selected.forEach((item, idx) => {
+                        const card = document.createElement('div');
+                        card.className = 'media-card';
+
+                        if (item.type === 'image') {
+                            const img = document.createElement('img');
+                            img.src = item.url;
+                            img.alt = item.name;
+                            card.appendChild(img);
+                        } else {
+                            const v = document.createElement('video');
+                            v.src = item.url; v.controls = true; v.playsInline = true;
+                            v.style.maxHeight = '220px';
+                            card.appendChild(v);
+                        }
+
+                        const meta = document.createElement('div');
+                        meta.className = 'media-meta';
+                        meta.textContent = `${item.type === 'image' ? 'Imagen' : 'Video'} · ${item.name}`;
+                        card.appendChild(meta);
+
+                        const prog = document.createElement('div');
+                        prog.className = 'media-progress'; prog.innerHTML = '<span></span>';
+                        prog.dataset.idx = idx;
+                        card.appendChild(prog);
+
+                        const del = document.createElement('button');
+                        del.type = 'button'; del.className = 'media-del'; del.textContent = 'Quitar';
+                        del.addEventListener('click', () => {
+                            URL.revokeObjectURL(item.url);
+                            selected.splice(idx,1);
+                            render();
+                        });
+                        card.appendChild(del);
+
+                        grid.appendChild(card);
+                    });
+                }
+
+                function uploadToCloudinary(item, onProgress){
+                    const endpoint = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/${item.type}/upload`;
+                    const fd = new FormData();
+                    fd.append('file', item.file);
+                    fd.append('upload_preset', UPLOAD_PRESET);
+                    fd.append('folder', FOLDER);
+
+                    return new Promise((resolve, reject) => {
+                        const xhr = new XMLHttpRequest();
+                        xhr.open('POST', endpoint);
+                        xhr.upload.onprogress = (e) => {
+                            if (e.lengthComputable && onProgress) {
+                                const pct = Math.round((e.loaded / e.total) * 100);
+                                onProgress(pct);
+                            }
+                        };
+                        xhr.onreadystatechange = () => {
+                            if (xhr.readyState === 4) {
+                                if (xhr.status >= 200 && xhr.status < 300) {
+                                    try {
+                                        resolve(JSON.parse(xhr.responseText));
+                                    } catch (err) {
+                                        reject(new Error('Respuesta inválida de Cloudinary'));
+                                    }
+                                } else {
+                                    reject(new Error('Error al subir: ' + xhr.status));
+                                }
+                            }
+                        };
+                        xhr.onerror = () => reject(new Error('Error de red al subir'));
+                        xhr.send(fd);
+                    });
+                }
+
+                function getProgressBar(idx){
+                    const card = grid.children[idx];
+                    const bar = card ? card.querySelector('.media-progress > span') : null;
+                    return bar;
+                }
+
+                function toast(msg){
+                    // reemplazá por tu sistema de mensajes / alert
+                    console.warn(msg);
+                }
+
+                form.addEventListener('submit', async (ev) => {
+                    if (selected.length === 0) return;
+
+                    ev.preventDefault();
+
+                    const submitBtn = form.querySelector('button[type=submit]');
+                    submitBtn.disabled = true;
+
+                    const results = [];
+                    try {
+                        for (let i=0; i<selected.length; i++){
+                            const item = selected[i];
+                            const bar = getProgressBar(i);
+                            // Progreso visual
+                            const onProgress = (pct) => { if (bar) bar.style.width = pct + '%'; };
+                            const res = await uploadToCloudinary(item, onProgress);
+                            // Guardar sólo lo necesario para tu backend
+                            results.push({
+                                publicId: res.public_id,
+                                tipo: res.resource_type,
+                                url: res.secure_url
+                            });
+                        }
+                        hidden.value = JSON.stringify(results);
+                        form.submit();
+                    } catch (e) {
+                        console.error(e);
+                        toast('No se pudo subir uno de los archivos. Revisá tamaños/formatos o intentá nuevamente.');
+                        submitBtn.disabled = false;
+                    }
+                });
+            })();
+        </script>
+    </div>
+
+</html>

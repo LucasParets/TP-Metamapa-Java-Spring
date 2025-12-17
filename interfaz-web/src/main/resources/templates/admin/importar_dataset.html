@@ -1,0 +1,31 @@
+<html lang="es" th:replace="~{layout/base_admin :: html}">
+    <div th:fragment="contenido">
+        <div class="importar-container">
+            <div class="importar-card white-card-black-border">
+                <h1 class="importar-title">Importar hechos</h1>
+
+                <!-- Mensajes de error -->
+                <div th:if="${error}" class="alert alert-danger" role="alert">
+                    <p th:text="${error}"></p>
+                </div>
+
+                <form class="importar-form" th:action="@{/admin/importar}" method="post" enctype="multipart/form-data">
+                    <div class="drop-zone" id="dropZone">
+                        <div class="drop-zone-content">
+                            <img src="/img/upload-icon.svg" alt="Upload" class="upload-icon">
+                            <p class="drop-zone-text">Arrastre y suelte el archivo</p>
+                            <label for="fileInput" class="black-btn">Elegir archivo</label>
+                        </div>
+                        <input type="file" name="file" accept=".csv" id="fileInput" class="importar-file-input" required>
+                    </div>
+                    <div class="importar-bottom-btns">
+                        <button type="submit" class="black-btn" id="submitButton">Importar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <th:block th:fragment="scripts">
+        <script th:src="@{/js/admin/importar.js}"></script>
+    </th:block>
+</html>

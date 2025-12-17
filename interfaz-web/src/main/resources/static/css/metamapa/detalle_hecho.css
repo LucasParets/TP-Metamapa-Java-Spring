@@ -1,0 +1,103 @@
+.right-menu-hecho {
+    padding: 30px;
+    overflow-y: auto;
+}
+
+.right-menu-hecho-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.hecho-header-left {
+    display: flex;
+}
+
+.hecho-header-right {
+    display: flex;
+}
+
+.back-arrow {
+    width: 30px;
+    height: 30px;
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+.edit-btn {
+    width: 30px;
+    height: 30px;
+    align-self: flex-end;
+    cursor: pointer;
+    margin-right: 15px;
+}
+
+.delete-btn {
+    width: 30px;
+    height: 30px;
+    align-self: flex-end;
+    cursor: pointer;
+}
+
+.hecho-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.hecho-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.hecho-info span {
+    margin-top: 15px;
+    color: black;
+    opacity: 0.45;
+    font-size: 0.95em;
+}
+
+.barra-divisora {
+    width: 100%;
+    height: 1px;
+    background-color: #ccc;
+    margin-top: 15px;
+}
+
+.hecho-descripcion p {
+    margin-top: 15px;
+    text-align: justify;
+}
+.hecho-info-adicional {
+    display: flex;
+    flex-direction: column;
+}
+
+.hecho-info-adicional-item {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+.hecho-info-adicional-item span {
+    font-weight: normal;
+    margin-left: 5px;
+
+}
+
+.hecho-info-adicional-item :first-child {
+    margin-top: 0;
+}
+
+.black-tag {
+    background-color: #222;
+    color: white;
+    border-radius: 5px;
+    padding: 3px 7px;
+    font-size: .8rem;
+    display: inline-flex;
+    align-items: center;
+    margin-top: 15px;
+}

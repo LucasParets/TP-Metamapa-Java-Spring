@@ -1,0 +1,116 @@
+<html lang="es" th:replace="~{layout/base_admin :: html}">
+<div th:fragment="contenido">
+    <div class="notificaciones-header">
+        <h2>Solicitudes de eliminación</h2>
+        <div class="notificaciones-header-estado-revision-btns">
+            <span th:if="${estado.equals('TODOS')}" class="estado-revision-desactivado">Todas</span>
+            <a th:if="${!estado.equals('TODOS')}" class="estado-revision" th:href="@{/admin/solicitudes-modificacion}">Todas</a>
+            <span th:if="${estado.equals('PENDIENTE')}" class="estado-revision-desactivado">Pendientes</span>
+            <a th:if="${!estado.equals('PENDIENTE')}" class="estado-revision" th:href="@{/admin/solicitudes-modificacion(estado='PENDIENTE')}">Pendientes</a>
+            <span th:if="${estado.equals('ACEPTADA')}" class="estado-revision-desactivado">Aceptadas</span>
+            <a th:if="${!estado.equals('ACEPTADA')}" class="estado-revision" th:href="@{/admin/solicitudes-modificacion(estado='ACEPTADA')}">Aceptadas</a>
+            <span th:if="${estado.equals('RECHAZADA')}" class="estado-revision-desactivado">Rechazadas</span>
+            <a th:if="${!estado.equals('RECHAZADA')}" class="estado-revision" th:href="@{/admin/solicitudes-modificacion(estado='RECHAZADA')}">Rechazadas</a>
+        </div>
+    </div>
+    <div class="notificaciones-list" th:if="${solicitudes == null || solicitudes.isEmpty()}">
+        <h2 style="color: #a80404; margin-top: 20px;">
+            No se pudieron encontrar solicitudes.
+        </h2>
+    </div>
+    <div class="notificaciones-list">
+        <div class="notificacion-card white-card-black-border" th:unless="solicitudes == null" th:each="s : ${solicitudes}">
+            <div class="notificacion-card-top">
+                <span class="notificacion-card-title" th:text="'Solicitud de modificación del hecho #' + ${s.idHecho} + ' - ' + ${s.estado}"></span>
+                <div class="notificacion-card-top-btns" th:if="${s.estado.toString() == 'PENDIENTE'}">
+                    <form th:action="@{/admin/solicitudes-modificacion/{id}/aceptar(id=${s.id})}" method="post">
+                        <button type="button" class="notificacion-card-accept" onclick="aceptar(this.form)">
+                            <span>✓</span>
+                        </button>
+                    </form>
+                    <form th:action="@{/admin/solicitudes-modificacion/{id}/rechazar(id=${s.id})}" method="post">
+                        <button type="button" class="notificacion-card-cancel" onclick="rechazar(this.form)">
+                            <span>X</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: .75rem;">
+                <span th:if="${s.fechaSolicitud != null}" style="margin-left: 1.5rem;">
+                    <span style="font-weight: bold">Fecha de la solicitud: </span>
+                    <span th:text="${#temporals.format(s.fechaSolicitud, 'dd/MM/yyyy HH:mm')} + 'hs'"></span>
+                </span>
+                <span th:if="${s.tituloNuevo != null}" style="margin-left: 1.5rem;">
+                    <span style="font-weight: bold">Titulo nuevo: </span>
+                    <span th:text="${s.tituloNuevo}"></span>
+                </span>
+                <span th:if="${s.descripcionNueva != null}" style="margin-left: 1.5rem;">
+                    <span style="font-weight: bold">Descripción nueva: </span>
+                    <span th:text="${s.descripcionNueva}"></span>
+                </span>
+                <span th:if="${s.categoriaNueva != null}" style="margin-left: 1.5rem;">
+                    <span style="font-weight: bold">Categoria nueva: </span>
+                    <span th:text="${s.categoriaNueva}"></span>
+                </span>
+                <span th:if="${s.latitudNueva != null}" style="margin-left: 1.5rem;">
+                    <span style="font-weight: bold">Latitud nueva: </span>
+                    <span th:text="${s.latitudNueva}"></span>
+                </span>
+                <span th:if="${s.longitudNueva != null}" style="margin-left: 1.5rem;">
+                    <span style="font-weight: bold">Longitud nueva: </span>
+                    <span th:text="${s.longitudNueva}"></span>
+                </span>
+                <span th:if="${s.fechaHechoNueva != null}" style="margin-left: 1.5rem;">
+                    <span style="font-weight: bold">Fecha del hecho nueva: </span>
+                    <span th:text="${#temporals.format(s.fechaHechoNueva, 'dd/MM/yyyy HH:mm')} + 'hs'"></span>
+                </span>
+                <p style="color: #9d9d9d; margin-left: 1.5rem;" th:if="${s.estado.toString() != 'PENDIENTE'}" th:text="'Revisado por ' + ${s.nombreAdmin} + ' el ' + ${#temporals.format(s.fechaModificacion, 'dd/MM/yyyy')} + ' a las ' + ${#temporals.format(s.fechaModificacion, 'HH:mm')} + 'hs'"></p>
+            </div>
+            <div class="notificacion-card-bottom">
+                <a class="black-btn" th:href="@{/admin/solicitudes-modificacion/hechos/{id}(id=${s.idHecho})}">Ver hecho</a>
+            </div>
+        </div>
+        <div th:replace="~{fragments/pagination :: pagination}"></div>
+    </div>
+    <script th:inline="javascript">
+        function aceptar(form) {
+            Swal.fire({
+                icon: 'warning',
+                title: '¿Desea modificar el hecho?',
+                text: 'Una vez modificado no se puede volver atrás.',
+                showCancelButton: true,
+                confirmButtonText: 'Modificar',
+                cancelButtonText: 'Cancelar',
+                customClass: {
+                    confirmButton: 'black-btn',
+                    cancelButton: 'cancel-btn'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        }
+
+        function rechazar(form) {
+            Swal.fire({
+                icon: 'question',
+                title: '¿Desea rechazar la solicitud de modificación?',
+                showCancelButton: true,
+                confirmButtonText: 'Confirmar',
+                cancelButtonText: 'Cancelar',
+                customClass: {
+                    confirmButton: 'black-btn',
+                    cancelButton: 'cancel-btn'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        }
+    </script>
+</div>
+<th:block th:fragment="scripts">
+</th:block>
+</html>

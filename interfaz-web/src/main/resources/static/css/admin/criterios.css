@@ -1,0 +1,144 @@
+/* Estilos para la vista de criterios */
+.criterios-panel {
+    margin-bottom: 30px;
+}
+
+.criterios-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.criterios-list table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.criterios-list th {
+    background-color: #f5f5f5;
+    text-align: left;
+    padding: 12px 10px;
+    border-bottom: 2px solid #ddd;
+    font-weight: bold;
+}
+
+.criterios-list td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #ddd;
+    vertical-align: top;
+}
+
+.criterios-list thead tr {
+    background-color: #f5f5f5;
+    border-bottom: 2px solid #ddd;
+}
+
+.criterios-list tbody tr {
+    border-bottom: 1px solid #ddd;
+}
+
+.coleccion-info-panel {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.coleccion-info-item {
+    margin-bottom: 8px;
+}
+
+/*.black-tag {*/
+/*    display: inline-block;*/
+/*    background-color: #333;*/
+/*    color: white;*/
+/*    padding: 3px 8px;*/
+/*    border-radius: 3px;*/
+/*    margin-right: 5px;*/
+/*    font-size: 0.9em;*/
+/*}*/
+
+#nuevo-criterio-form {
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    margin-top: 20px;
+}
+
+.criterio-select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+.parametro-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.black-btn {
+    background-color: #222;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 0.9em;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.black-btn:hover {
+    opacity: 0.8;
+}
+
+.red-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
+
+.red-btn:hover {
+    background-color: #c82333;
+}
+
+.criterio-item {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#categoria-select {
+    display: none;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 5px;
+}
+
+#categoria-select select {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+

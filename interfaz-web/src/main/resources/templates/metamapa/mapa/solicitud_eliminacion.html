@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es" th:replace="~{layout/base_mapa :: html}">
+    <div th:fragment="contenido" class="right-menu">
+        <div class="right-menu-hecho-header">
+            <div class="hecho-header-left">
+                <img src="/img/left-arrow-svgrepo-com.svg" alt="Volver" class="back-arrow" onclick="history.back()"/>
+                <h2 style="color: #232323" th:text="${hecho.titulo}">Nombre hecho</h2>
+            </div>
+        </div>
+        <div class="hecho-container">
+            <form th:unless="${esMetamapa != null && esMetamapa}" style="margin-top: 10px;" th:action="@{/hechos/{id}/solicitud-eliminacion(id=${hecho.id})}" th:object="${solicitud}" method="post">
+                <h4><label class="form-hecho-label" for="descripcion">Solicitar eliminación</label></h4>
+                <textarea style="margin-top: 10px" minlength="500" th:field="*{descripcion}" class="form-hecho-textarea" id="descripcion" name="descripcion" rows="4" placeholder="Ingrese el motivo por el cual solicita la eliminación del hecho..." required></textarea>
+                <div style="display: flex; justify-content: end;">
+                    <button class="black-btn form-hecho-submit-btn" type="submit">Enviar</button>
+                </div>
+            </form>
+            <form th:if="${esMetamapa != null && esMetamapa}" style="margin-top: 10px;" th:action="@{/metamapa/hechos/{id}/solicitud-eliminacion(id=${hecho.id})}" th:object="${solicitud}" method="post">
+                <h4><label class="form-hecho-label" for="descripcion2">Solicitar eliminación</label></h4>
+                <textarea style="margin-top: 10px" minlength="500" th:field="*{descripcion}" class="form-hecho-textarea" id="descripcion2" name="descripcion" rows="4" placeholder="Ingrese el motivo por el cual solicita la eliminación del hecho..." required></textarea>
+                <input type="hidden" name="metamapa" th:value="${metamapa}">
+                <div style="display: flex; justify-content: end;">
+                    <button class="black-btn form-hecho-submit-btn" type="submit">Enviar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</html>

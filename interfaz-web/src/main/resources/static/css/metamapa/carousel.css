@@ -1,0 +1,18 @@
+.hecho-carousel {
+  --slide-max-h: 300px;
+  --radius: 12px;
+}
+
+.hecho-slide-media {
+  width: 100%;
+  height: auto;
+  max-height: var(--slide-max-h);
+  border-radius: var(--radius);
+  display: block;
+  object-fit: contain;
+  background: #000;
+}
+
+.hecho-container .f-carousel {
+  margin-bottom: 12px;
+}

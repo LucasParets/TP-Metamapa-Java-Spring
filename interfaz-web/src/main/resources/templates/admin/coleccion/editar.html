@@ -1,0 +1,61 @@
+<html lang="es" th:replace="~{layout/base_admin :: html}">
+  <div th:fragment="contenido">
+      <div class="crear-coleccion-container">
+        <div class="crear-coleccion-card white-card-black-border">
+          <h1 class="crear-coleccion-title">Editar Colección</h1>
+          <form th:action="@{/admin/colecciones/{handle}/actualizar(handle=${coleccion.handle})}" th:object="${coleccion}" class="crear-coleccion-form" method="post">
+            <label class="crear-coleccion-label" for="nombre">Nombre de la colección:</label>
+            <input class="crear-coleccion-input" type="text" id="nombre" name="nombre" th:field="*{titulo}" required>
+
+            <label class="crear-coleccion-label" for="descripcion">Descripción:</label>
+            <textarea th:field="*{descripcion}" class="crear-coleccion-textarea" id="descripcion" name="descripcion" rows="4" required></textarea>
+
+            <div class="crear-coleccion-info">
+              <label>Fuentes:</label>
+              <div class="checkbox-group">
+                <div class="checkbox-item">
+                  <input type="checkbox" id="estatica" name="fuentes" value="Estatica" th:field="*{fuentes}" class="fuente-checkbox">
+                  <label for="estatica" class="checkbox-label">Estática</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="dinamica" name="fuentes" value="Dinamica" th:field="*{fuentes}" class="fuente-checkbox">
+                  <label for="dinamica" class="checkbox-label">Dinámica</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="proxy" name="fuentes" value="Proxy" th:field="*{fuentes}" class="fuente-checkbox">
+                  <label for="proxy" class="checkbox-label">Proxy</label>
+                </div>
+              </div>
+            </div>
+            <div class="crear-coleccion-info">
+              <label>Algoritmo:</label>
+              <div class="radio-group">
+                <div class="radio-item">
+                  <input type="radio" id="absoluta" name="consenso" value="Absoluta" th:field="*{consenso}" class="algoritmo-radio">
+                  <label for="absoluta" class="radio-label">Absoluta</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="mayoriasimple" name="consenso" value="MayoriaSimple" th:field="*{consenso}" class="algoritmo-radio">
+                  <label for="mayoriasimple" class="radio-label">Mayoría Simple</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="multiplesmenciones" name="consenso" value="MultiplesMenciones" th:field="*{consenso}" class="algoritmo-radio">
+                  <label for="multiplesmenciones" class="radio-label">Múltiples Menciones</label>
+                </div>
+                <div class="radio-item">
+                  <input type="radio" id="none" name="consenso" value="null" th:field="*{consenso}" class="algoritmo-radio">
+                  <label for="none" class="radio-label">Ninguno</label>
+                </div>
+              </div>
+            </div>
+            <div class="crear-coleccion-btns">
+              <a onclick="history.back()" class="cancel-btn">Cancelar</a>
+              <button class="black-btn crear-coleccion-submit-btn" type="submit">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <th:block th:fragment="scripts">
+    </th:block>
+</html>

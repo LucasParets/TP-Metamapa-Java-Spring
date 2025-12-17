@@ -1,0 +1,70 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: servicio-gateway
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:
+              - ${URI_INTERFAZ}
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+            maxAge: 3600
+      routes:
+        - id: servicio-agregacion
+          uri: lb://servicio-agregacion
+          predicates:
+            - Path=/api/agregador/**
+        - id: fuente-dinamica
+          uri: lb://fuente-dinamica
+          predicates:
+            - Path=/api/dinamica/**
+        - id: fuente-estatica
+          uri: lb://fuente-estatica
+          predicates:
+            - Path=/api/estatica/**
+        - id: fuente-proxy
+          uri: lb://fuente-proxy
+          predicates:
+            - Path=/api/proxy/**
+        - id: servicio-auth
+          uri: lb://servicio-auth
+          predicates:
+            - Path=/api/auth/**
+        - id: servicio-estadisticas
+          uri: lb://servicio-estadisticas
+          predicates:
+            - Path=/api/estadistica/**
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          secret-key: ${JWT_KEY}
+          jws-algorithms: HS256
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      show-details: always
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${URI_EUREKA}
+    registerWithEureka: true
+    fetch-registry: true

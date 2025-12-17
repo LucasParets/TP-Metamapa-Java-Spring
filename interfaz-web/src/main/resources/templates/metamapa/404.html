@@ -1,0 +1,7 @@
+<html lang="es" th:replace="~{layout/base :: html}">
+    <div th:fragment="contenido">
+        <!--/*@thymesVar id="mensaje" type=""*/-->
+        <h3 style="margin: 2rem" th:text="${mensaje} ?: 'Elemento no encontrado'"></h3>
+        <a style="margin: 2rem" th:href="@{/inicio}">Volver al inicio</a>
+    </div>
+</html>

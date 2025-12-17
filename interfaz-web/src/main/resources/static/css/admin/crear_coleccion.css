@@ -1,0 +1,209 @@
+.crear-coleccion-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.crear-coleccion-card {
+    width: 500px;
+    padding: 3rem 4rem;
+}
+
+.crear-coleccion-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.crear-coleccion-input, .crear-coleccion-textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+
+.crear-coleccion-title {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.crear-coleccion-btns {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.cancel-btn {
+    color: #222;
+    text-decoration: none;
+    border: none;
+    padding: .5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    background-color: transparent;
+}
+
+.crear-coleccion-submit-btn {
+    padding: 0 2.5rem;
+}
+
+.tag:active {
+    background-color: black;
+    color: white;
+}
+
+/* Estilos para grupos de checkboxes y radio buttons */
+.checkbox-group, .radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.checkbox-item, .radio-item {
+    display: flex;
+    align-items: center;
+    background-color: #f5f5f5;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.checkbox-item:hover, .radio-item:hover {
+    background-color: #e0e0e0;
+}
+
+.fuente-checkbox, .algoritmo-radio {
+    margin-right: 0.5rem;
+    cursor: pointer;
+}
+
+.checkbox-label, .radio-label {
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.checkbox-item input:checked + .checkbox-label,
+.radio-item input:checked + .radio-label {
+    font-weight: bold;
+}
+
+.checkbox-item input:checked ~ .checkbox-item,
+.radio-item input:checked ~ .radio-item {
+    background-color: #2A2A2A;
+    color: white;
+}
+
+.crear-coleccion-info {
+    margin-bottom: 0.5rem;
+}
+
+.crear-coleccion-info > label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+/* Estilos para criterios */
+.criterio-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    position: relative;
+}
+
+.criterio-select {
+    width: 200px;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 0.9rem;
+}
+
+.parametros-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    flex: 1;
+}
+
+.parametro-input {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 0.9rem;
+}
+
+.remove-criterio-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+}
+
+.remove-criterio-btn:hover {
+    color: #ff0000;
+}
+
+.agregar-criterio-btn {
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.agregar-criterio-btn:hover {
+    background-color: #e0e0e0;
+}
+
+#criterios-container {
+    width: 100%;
+}
+
+@media screen and (max-width: 710px){
+    .crear-coleccion-card {
+        width: 70%;
+    }
+}
+
+@media screen and (max-width: 500px){
+    .crear-coleccion-card {
+        width: 60%;
+    }
+    .crear-coleccion-container {
+        margin: 4rem 0;
+    }
+}
+
+@media screen and (max-width: 400px){
+    .crear-coleccion-card {
+        width: auto;
+        margin: 0;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0;
+    }
+    .crear-coleccion-container {
+        margin: 0;
+    }
+}
+

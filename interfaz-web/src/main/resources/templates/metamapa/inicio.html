@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/base :: html}" lang="es">
+    <div th:fragment="contenido" style="margin: 0; display: flex; flex-direction: column; min-height: calc(100vh - 80px);">
+        <main>
+            <section class="intro">
+                <div class="intro-text">
+                    <h2>Sistema de gestión de mapeos colaborativos</h2>
+                    <p>
+                        MetaMapa impulsa la inteligencia colectiva para visibilizar
+                        problemáticas sociales y ambientales mediante el mapeo
+                        colaborativo de información confiable y descentralizada.
+                    </p>
+                    <p>
+                        Nuestra labor es organizar datos en tiempo y espacio, permitir
+                        aportes ciudadanos y de ONGs, proteger la privacidad de los
+                        usuarios y ofrecer visualizaciones abiertas para la toma de
+                        decisiones.
+                    </p>
+                    <div class="btns-intro">
+                        <a th:href="@{/hechos}" class="btn-ver-colecciones">Explorar hechos</a>
+                        <a th:href="@{/colecciones}" class="btn-ver-colecciones">Ver colecciones</a>
+                    </div>
+                </div>
+                <div class="intro-image">
+                    <img src="/img/mapa_disenio.png" alt="Mapa con pines de ubicación" />
+                </div>
+            </section>
+
+            <section class="destacados">
+                <div class="destacado-header">
+                    <h3>Colecciones destacadas</h3>
+                </div>
+                <h4 style="color: #a80404" th:if="${coleccionesDestacadas == null || coleccionesDestacadas.isEmpty()}">
+                    No se encontraron colecciones destacadas.
+                </h4>
+                <div th:unless="${coleccionesDestacadas == null || coleccionesDestacadas.isEmpty()}" id="carousel2" class="f-carousel carousel-container">
+                    <div class="f-carousel__slide" style="display: flex;" th:each="c : ${coleccionesDestacadas}">
+                        <div class="card">
+                            <h4 th:text="${c.titulo}"></h4>
+                            <p th:text="${c.descripcion}"></p>
+                            <a th:href="@{/colecciones/{handle}/hechos(handle=${c.handle})}" class="ver-hecho">Ver hechos</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="destacados">
+                <div class="destacado-header">
+                    <h3>Hechos destacados</h3>
+                    <a th:unless="${hechosDestacados == null || hechosDestacados.isEmpty()}" th:href="@{/hechos-destacados}" class="ver-mas">Ver más</a>
+                </div>
+                <h4 style="color: #a80404" th:if="${hechosDestacados == null || hechosDestacados.isEmpty()}">
+                    No se encontraron hechos destacados.
+                </h4>
+                <div th:unless="${hechosDestacados == null || hechosDestacados.isEmpty()}" id="carousel" class="f-carousel carousel-container">
+                    <div class="f-carousel__slide" style="display: flex;" th:each="h : ${hechosDestacados}">
+                        <div class="card">
+                            <h4 th:text="${h.titulo}"></h4>
+                            <p th:text="${h.descripcion}"></p>
+                            <a th:href="@{/hechos/{id}(id=${h.id})}" class="ver-hecho">Ver hecho</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div class="footer-content">
+                <a href="#">Recursos</a>
+                <a href="#">Términos y condiciones</a>
+                <a href="#">Privacidad</a>
+            </div>
+        </footer>
+        <script defer src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/carousel/carousel.umd.js"></script>
+        <script th:inline="javascript">
+            document.addEventListener('DOMContentLoaded', () => {
+                const container  = document.getElementById('carousel');
+                const container2 = document.getElementById('carousel2');
+                if (!container  || !window.Carousel) return;
+                if (!container2 || !window.Carousel) return;
+
+                let slidesPP = 2
+
+                if (window.innerWidth <= 700) slidesPP = 1;
+
+                const options = {
+                    slidesPerPage: slidesPP,
+                    navigation: true,
+                    infinite: false,
+                    transition: 'slide'
+                }
+
+                new Carousel(container , options);
+
+                new Carousel(container2 , options);
+            });
+        </script>
+    </div>
+</html>

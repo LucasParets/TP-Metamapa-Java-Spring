@@ -1,0 +1,91 @@
+<html lang="es" th:replace="~{layout/base_admin :: html}">
+<div th:fragment="contenido">
+    <div class="notificaciones-header">
+        <h2>Solicitudes de eliminación</h2>
+        <div class="notificaciones-header-estado-revision-btns">
+            <span th:if="${estado.equals('TODOS')}" class="estado-revision-desactivado">Todas</span>
+            <a th:if="${!estado.equals('TODOS')}" class="estado-revision" th:href="@{/admin/solicitudes-eliminacion}">Todas</a>
+            <span th:if="${estado.equals('PENDIENTE')}" class="estado-revision-desactivado">Pendientes</span>
+            <a th:if="${!estado.equals('PENDIENTE')}" class="estado-revision" th:href="@{/admin/solicitudes-eliminacion(estado='PENDIENTE')}">Pendientes</a>
+            <span th:if="${estado.equals('ACEPTADA')}" class="estado-revision-desactivado">Aceptadas</span>
+            <a th:if="${!estado.equals('ACEPTADA')}" class="estado-revision" th:href="@{/admin/solicitudes-eliminacion(estado='ACEPTADA')}">Aceptadas</a>
+            <span th:if="${estado.equals('RECHAZADA')}" class="estado-revision-desactivado">Rechazadas</span>
+            <a th:if="${!estado.equals('RECHAZADA')}" class="estado-revision" th:href="@{/admin/solicitudes-eliminacion(estado='RECHAZADA')}">Rechazadas</a>
+        </div>
+    </div>
+    <div class="notificaciones-list" th:if="${solicitudes == null || solicitudes.isEmpty()}">
+        <h2 style="color: #a80404; margin-top: 20px;">
+            No se pudieron encontrar solicitudes.
+        </h2>
+    </div>
+    <div class="notificaciones-list">
+        <div class="notificacion-card white-card-black-border" th:unless="solicitudes == null" th:each="s : ${solicitudes}">
+            <div class="notificacion-card-top">
+                <span class="notificacion-card-title" th:text="'Solicitud de eliminación del hecho #' + ${s.idHecho} + ' - ' + ${s.estado}"></span>
+                <div class="notificacion-card-top-btns" th:if="${s.estado.toString() == 'PENDIENTE'}">
+                    <form th:action="@{/admin/solicitudes-eliminacion/{id}/aprobar(id=${s.id})}" method="post">
+                        <button type="button" class="notificacion-card-accept" onclick="aceptar(this.form)">
+                            <span>✓</span>
+                        </button>
+                    </form>
+                    <form th:action="@{/admin/solicitudes-eliminacion/{id}/rechazar(id=${s.id})}" method="post">
+                        <button type="button" class="notificacion-card-cancel" onclick="rechazar(this.form)">
+                            <span>X</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="notificacion-card-content">
+                <h4 th:text="${s.tituloHecho}"></h4>
+                <p class="notificacion-description" th:text="${s.descripcion}"></p>
+                <p style="color: #9d9d9d;" th:text="'Solicitud creada por ' + ${s.nombreUsuario == null ? 'Anónimo' : s.nombreUsuario} + ' el ' + ${#temporals.format(s.fechaCreacion, 'dd/MM/yyyy')} + ' a las ' + ${#temporals.format(s.fechaCreacion, 'HH:mm')} + 'hs'"></p>
+                <p style="color: #9d9d9d;" th:if="${s.estado.toString() != 'PENDIENTE'}" th:text="'Revisado por ' + ${s.nombreAdmin} + ' el ' + ${#temporals.format(s.fechaResolucion, 'dd/MM/yyyy')} + ' a las ' + ${#temporals.format(s.fechaResolucion, 'HH:mm')} + 'hs'"></p>
+            </div>
+            <div class="notificacion-card-bottom">
+                <a class="black-btn" th:href="@{/hechos/{id}(id=${s.idHecho})}">Ver hecho</a>
+            </div>
+        </div>
+        <div th:replace="~{fragments/pagination :: pagination}"></div>
+    </div>
+    <script th:inline="javascript">
+        function aceptar(form) {
+            Swal.fire({
+                icon: 'warning',
+                title: '¿Desea eliminar el hecho?',
+                text: 'Una vez eliminado, el hecho va a dejar de estar visible para los usuarios.',
+                showCancelButton: true,
+                confirmButtonText: 'Eliminar',
+                cancelButtonText: 'Cancelar',
+                customClass: {
+                    confirmButton: 'black-btn',
+                    cancelButton: 'cancel-btn'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        }
+
+        function rechazar(form) {
+            Swal.fire({
+                icon: 'question',
+                title: '¿Desea rechazar la solicitud de eliminación?',
+                showCancelButton: true,
+                confirmButtonText: 'Confirmar',
+                cancelButtonText: 'Cancelar',
+                customClass: {
+                    confirmButton: 'black-btn',
+                    cancelButton: 'cancel-btn'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        }
+    </script>
+</div>
+<th:block th:fragment="scripts">
+</th:block>
+</html>

@@ -1,0 +1,80 @@
+.colecciones-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 2rem 2.5rem 0 2.5rem;
+}
+
+.colecciones-list {
+    padding: 1rem 2.5rem;
+}
+
+.coleccion-card {
+    margin-bottom: 1rem;
+}
+
+.coleccion-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.coleccion-card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.coleccion-description {
+    margin: 1.5rem 0;
+    color: #333;
+    text-align: justify;
+}
+
+.coleccion-info {
+    margin-bottom: .75rem;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.coleccion-algoritmo {
+    font-weight: normal;
+    margin-left: .3rem;
+}
+
+.coleccion-card-bottom {
+    display: flex;
+    gap: .85rem;
+    justify-content: flex-end;
+}
+
+.coleccion-card-top-btns {
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+}
+
+.edit-btn {
+    width: 2rem;
+    height: 2rem;
+    cursor: pointer;
+}
+
+.delete-btn {
+    width: 2rem;
+    height: 2rem;
+    cursor: pointer;
+}
+
+.destacado-btn {
+    width: 2rem;
+    height: 2rem;
+    cursor: pointer;
+}
+
+.delete-btn:hover,
+.edit-btn:hover,
+.destacado-btn:hover {
+    opacity: .4;
+}

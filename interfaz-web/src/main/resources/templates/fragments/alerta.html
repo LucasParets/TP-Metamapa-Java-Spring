@@ -1,0 +1,94 @@
+<th:block th:fragment="swal">
+  <th:block th:if="${swal != null}">
+    <script th:inline="javascript">
+      const opts = /*[[${swal}]]*/ {};
+      Swal.fire(opts);
+    </script>
+  </th:block>
+  <th:block th:if="${param.login != null}">
+    <script th:inline="javascript">
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "bottom-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        }
+      });
+      Toast.fire({
+        icon: "success",
+        title: "Se inició sesión correctamente."
+      });
+
+      (function(){
+        if (!window.history.replaceState) return;
+        const url = new URL(window.location);
+        url.searchParams.delete('login');
+        window.history.replaceState({}, document.title, url.pathname + url.search + url.hash);
+      })();
+    </script>
+  </th:block>
+  <th:block th:if="${param.logout != null}">
+    <script th:inline="javascript">
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "bottom-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        }
+      });
+      Toast.fire({
+        icon: "success",
+        title: "Se cerró la sesión."
+      });
+
+      (function(){
+        if (!window.history.replaceState) return;
+        const url = new URL(window.location);
+        url.searchParams.delete('logout');
+        window.history.replaceState({}, document.title, url.pathname + url.search + url.hash);
+      })();
+    </script>
+  </th:block>
+  <th:block th:if="${param.unauthorized != null}">
+    <script th:inline="javascript">
+      // Swal.fire({
+      //   title: '¡Cuidado!',
+      //   text: 'Necesitas estar autenticado para avanzar.',
+      //   icon: 'warning',
+      //   confirmButtonText: 'Aceptar'
+      // });
+
+      (function(){
+        if (!window.history.replaceState) return;
+        const url = new URL(window.location);
+        url.searchParams.delete('unauthorized');
+        window.history.replaceState({}, document.title, url.pathname + url.search + url.hash);
+      })();
+    </script>
+  </th:block>
+  <th:block th:if="${param.accessDenied != null}">
+    <script th:inline="javascript">
+      // Swal.fire({
+      //   title: '¡Cuidado!',
+      //   text: 'No estás autorizado para ingresar.',
+      //   icon: 'warning',
+      //   confirmButtonText: 'Aceptar'
+      // });
+
+      (function(){
+        if (!window.history.replaceState) return;
+        const url = new URL(window.location);
+        url.searchParams.delete('accessDenied');
+        window.history.replaceState({}, document.title, url.pathname + url.search + url.hash);
+      })();
+    </script>
+  </th:block>
+</th:block>
