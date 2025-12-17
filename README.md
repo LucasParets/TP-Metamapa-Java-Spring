@@ -1,48 +1,72 @@
-MetaMapa es un sistema de mapeo colaborativo desarrollado como Trabajo Práctico Anual (TPA) para la materia Diseño de Sistemas de Información.
-El objetivo del sistema es permitir la recolección, validación, agregación y visualización de hechos provenientes de distintas fuentes, utilizando una arquitectura distribuida basada en servicios.
+# MetaMapa
 
-El proyecto está diseñado para simular un entorno real, incorporando autenticación, seguridad, gateway, discovery y comunicación entre servicios.
+### Sistema de Mapeo Colaborativo
 
-🧱 Arquitectura general
+**Trabajo Práctico Anual – Diseño de Sistemas de Información**
 
-El sistema está compuesto por múltiples servicios independientes que se comunican entre sí:
+---
 
--Fuente Estática: expone hechos predefinidos.
+## 📌 Descripción del proyecto
 
--Fuente Dinámica: permite la carga, modificación y validación de hechos.
+**MetaMapa** es un sistema de mapeo colaborativo desarrollado como **Trabajo Práctico Anual (TPA)** para la materia **Diseño de Sistemas de Información**.
 
--Fuente Proxy: actúa como intermediario hacia fuentes externas.
+El objetivo del sistema es permitir la **recolección, validación, agregación y visualización de hechos** provenientes de distintas fuentes, utilizando una **arquitectura distribuida basada en servicios**.
 
--Servicio de Agregación: consolida hechos provenientes de distintas fuentes.
+El proyecto busca simular un entorno real, incorporando conceptos de **autenticación, seguridad, API Gateway, Service Discovery y comunicación entre servicios**.
 
--Servicio de Autenticación: gestiona usuarios y permisos.
+---
 
--Servicio Gateway: punto de entrada único al sistema.
+## 🧱 Arquitectura general
 
--Servicio Discovery: registro y descubrimiento de servicios.
+El sistema está compuesto por múltiples **servicios independientes**, cada uno con una responsabilidad bien definida:
 
--Servicio de Estadísticas: generación de métricas e indicadores.
+* **Fuente Estática**
+  Expone hechos predefinidos y datos persistentes.
 
--Interfaz Web: frontend para interacción con el sistema.
+* **Fuente Dinámica**
+  Permite la carga, modificación y validación de hechos ingresados por los usuarios.
 
-🛠️ Tecnologías utilizadas
+* **Fuente Proxy**
+  Actúa como intermediario para el consumo de fuentes externas.
 
-Java
+* **Servicio de Agregación**
+  Consolida y unifica hechos provenientes de distintas fuentes.
 
-Spring Boot
+* **Servicio de Autenticación**
+  Gestiona usuarios, roles y permisos del sistema.
 
-Spring Security
+* **Servicio Gateway**
+  Funciona como punto de entrada único al sistema, centralizando las peticiones.
 
-Spring Cloud (Gateway / Discovery)
+* **Servicio Discovery**
+  Permite el registro y descubrimiento dinámico de los servicios.
 
-HTML/CSS/JS
+* **Servicio de Estadísticas**
+  Genera métricas e indicadores a partir de los hechos recolectados.
 
-REST APIs
+* **Interfaz Web**
+  Frontend que permite la interacción de los usuarios con el sistema.
 
-Service Discovery
+---
 
-API Gateway
+## 🛠️ Tecnologías utilizadas
 
-Autenticación centralizada
+### Backend
 
-Control de accesos y roles
+* **Java**
+* **Spring Boot**
+* **Spring Security**
+* **Spring Cloud** (Gateway / Discovery)
+* **REST APIs**
+
+### Frontend
+
+* **HTML / CSS / JavaScript**
+
+### Arquitectura e infraestructura
+
+* **Arquitectura basada en servicios**
+* **Service Discovery**
+* **API Gateway**
+* **Autenticación centralizada**
+* **Control de accesos y roles**
