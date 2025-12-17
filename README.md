@@ -1,80 +1,48 @@
-# java-base-project
+MetaMapa es un sistema de mapeo colaborativo desarrollado como Trabajo Práctico Anual (TPA) para la materia Diseño de Sistemas de Información.
+El objetivo del sistema es permitir la recolección, validación, agregación y visualización de hechos provenientes de distintas fuentes, utilizando una arquitectura distribuida basada en servicios.
 
-Esta es una plantilla de proyecto diseñada para: 
+El proyecto está diseñado para simular un entorno real, incorporando autenticación, seguridad, gateway, discovery y comunicación entre servicios.
 
-* Java 17. :warning: Si bien el proyecto no lo limita explícitamente, el comando `mvn verify` no funcionará con versiones más antiguas de Java. 
-* JUnit 5. :warning: La versión 5 de JUnit es la más nueva del framework y presenta algunas diferencias respecto a la versión "clásica" (JUnit 4). Para mayores detalles, ver: 
-  *  [Apunte de herramientas](https://docs.google.com/document/d/1VYBey56M0UU6C0689hAClAvF9ILE6E7nKIuOqrRJnWQ/edit#heading=h.dnwhvummp994)
-  *  [Entrada de Blog (en inglés)](https://www.baeldung.com/junit-5-migration) 
-  *  [Entrada de Blog (en español)](https://www.paradigmadigital.com/dev/nos-espera-junit-5/)
-* Maven 3.8.1 o superior
+🧱 Arquitectura general
 
-## Ejecutar tests
+El sistema está compuesto por múltiples servicios independientes que se comunican entre sí:
 
-```
-mvn test
-```
+-Fuente Estática: expone hechos predefinidos.
 
-## Validar el proyecto de forma exahustiva
+-Fuente Dinámica: permite la carga, modificación y validación de hechos.
 
-```
-mvn clean verify
-```
+-Fuente Proxy: actúa como intermediario hacia fuentes externas.
 
-Este comando hará lo siguiente:
+-Servicio de Agregación: consolida hechos provenientes de distintas fuentes.
 
- 1. Ejecutará los tests
- 2. Validará las convenciones de formato mediante checkstyle
- 3. Detectará la presencia de (ciertos) code smells
- 4. Validará la cobertura del proyecto
+-Servicio de Autenticación: gestiona usuarios y permisos.
 
-## Entrega del proyecto
+-Servicio Gateway: punto de entrada único al sistema.
 
-Para entregar el proyecto, crear un tag llamado `entrega-final`. Es importante que antes de realizarlo se corra la validación
-explicada en el punto anterior. Se recomienda hacerlo de la siguiente forma:
+-Servicio Discovery: registro y descubrimiento de servicios.
 
-```
-mvn clean verify && git tag entrega-final && git push origin HEAD --tags
-```
+-Servicio de Estadísticas: generación de métricas e indicadores.
 
-## Configuración del IDE (IntelliJ)
+-Interfaz Web: frontend para interacción con el sistema.
 
-### Usar el SDK de Java 17
+🛠️ Tecnologías utilizadas
 
-1. En **File/Project Structure...**, ir a **Project Settings | Project**
-2. En **Project SDK** seleccionar la versión 17 y en **Project language level** seleccionar `17 - Sealed types, always-strict floating-point semantics`
+Java
 
-![image](https://user-images.githubusercontent.com/39303639/228126065-221b9851-fb96-4f7f-a8e1-010732dc7ef6.png)
+Spring Boot
 
-### Usar fin de linea unix
-1. En **File/Settings...**, ir a **Editor | Code Style**.
-2. En la lista **Line separator**, seleccionar `Unix and OS X (\n)`.
+Spring Security
 
-![image](https://user-images.githubusercontent.com/39303639/228126546-352289fa-8feb-4b39-99db-d8b860915fea.png)
+Spring Cloud (Gateway / Discovery)
 
-### Tabular con dos espacios
+HTML/CSS/JS
 
-1. En **File/Settings...**, ir a **Editor | Code Style | Java | Tabs and Indents**.
-2. Cambiar **Tab size**, **Indent** y **Continuation indent** a 2, 2 y 4 respectivamente:
+REST APIs
 
-![image](https://user-images.githubusercontent.com/39303639/228127009-8c84ea72-969b-4e05-b311-45e3688a4164.png)
+Service Discovery
 
-### Ordenar los imports
+API Gateway
 
-1. En **File/Settings...**, ir a **Editor | Code Style | Java | Imports**.
-2. Cambiar **Class count to use import with '*'** y **Names count to use static import with '*'** a un número muy alto (ej: 99).
-3. En **Import Layout**, dejarlo como se muestra a continuación:
-    - `import static all other imports`
-    - `<blank line>`
-    - `import all other imports`
+Autenticación centralizada
 
-![image](https://user-images.githubusercontent.com/39303639/228126787-36f9ecff-27f2-4b99-bf11-a6bd89f67087.png)
-
-### Instalar y configurar Checkstyle
-
-1. Instalar el plugin https://plugins.jetbrains.com/plugin/1065-checkstyle-idea:
-2. En **File/Settings...**, ir a **Tools | Checkstyle**.
-3. Configurarlo activando los Checks de Google y la versión de Checkstyle `== 9.0.1`:
-
-![image](https://github.com/dds-utn/java-base-project/assets/11719816/b1edc122-4675-4f8d-bffc-9e3d3366fac6)
-
+Control de accesos y roles
