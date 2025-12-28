@@ -15,7 +15,11 @@ El objetivo del sistema es permitir la **recolección, validación, agregación 
 El proyecto busca simular un entorno real, incorporando conceptos de **autenticación, seguridad, API Gateway, Service Discovery y comunicación entre servicios**.
 
 ---
+### Arquitectura e infraestructura
 
+![Diagrama de despliegue](https://github.com/user-attachments/assets/f30c9a53-aa72-4885-a3f2-4f16e46abaf8)
+
+---
 ## 🧱 Arquitectura general
 
 El sistema está compuesto por múltiples **servicios independientes**, cada uno con una responsabilidad bien definida:
@@ -70,3 +74,5 @@ El sistema está compuesto por múltiples **servicios independientes**, cada uno
 * **API Gateway**
 * **Autenticación centralizada**
 * **Control de accesos y roles**
+
+
